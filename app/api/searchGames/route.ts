@@ -1,13 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
-import data from '@/data/games.json';
+import { searchGames } from '@/lib/database';
 
 export async function POST(req: NextRequest) {
-  const { query } = await req.json();
-  const q = (query || '').toLowerCase();
-  const results = (data as any[]).filter(g =>
-    g.title.toLowerCase().includes(q) ||
-    (g.tags||[]).some((t:string)=> t.includes(q)) ||
-    (g.theme||'').toLowerCase().includes(q)
-  ).slice(0, 10).map(g => ({ id: g.id, title: g.title }));
-  return NextResponse.json({ results });
+  try {
+    const { query } = await req.json();
+    
+    if (!query || typeof query !== 'string') {
+      return NextResponse.json({ results: [] });
+    }
+    
+    const games = await searchGames(query, 10);
+    const results = games.map(game => ({ 
+      id: game.id, 
+      title: game.title,
+      theme: game.theme,
+      players: game.players,
+      playtime: game.playtime,
+      complexity: game.complexity
+    }));
+    
+    return NextResponse.json({ results });
+  } catch (error) {
+    console.error('Error in search API:', error);
+    return NextResponse.json({ results: [] });
+  }
 }

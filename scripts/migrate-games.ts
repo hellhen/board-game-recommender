@@ -1,5 +1,19 @@
-import { supabase } from '../lib/supabase';
+import * as dotenv from 'dotenv';
+import { createClient } from '@supabase/supabase-js';
 import gamesData from '../data/games.json';
+
+// Load environment variables from .env.local
+dotenv.config({ path: '.env.local' });
+
+// Create Supabase client with service role key for admin operations
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseServiceKey) {
+  throw new Error('Missing Supabase environment variables. Please check your .env.local file.');
+}
+
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 /**
  * Migration script to populate Supabase with existing games data
@@ -53,15 +67,13 @@ export async function migrateGamesToSupabase() {
   }
 }
 
-// If running this file directly (for testing)
-if (require.main === module) {
-  migrateGamesToSupabase()
-    .then(() => {
-      console.log('Migration script completed successfully');
-      process.exit(0);
-    })
-    .catch((error) => {
-      console.error('Migration script failed:', error);
-      process.exit(1);
-    });
-}
+// Run migration immediately if this file is executed directly
+migrateGamesToSupabase()
+  .then(() => {
+    console.log('Migration script completed successfully');
+    process.exit(0);
+  })
+  .catch((error) => {
+    console.error('Migration script failed:', error);
+    process.exit(1);
+  });
