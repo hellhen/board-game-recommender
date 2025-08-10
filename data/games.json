@@ -1,0 +1,280 @@
+[
+  {
+    "id": "cascadia",
+    "title": "Cascadia",
+    "players": "1\u20134 (best 2\u20133)",
+    "playtime": "30\u201345 min",
+    "complexity": 2.1,
+    "mechanics": [
+      "tile-laying",
+      "pattern-building",
+      "set-collection"
+    ],
+    "theme": "nature",
+    "tags": [
+      "nature",
+      "family",
+      "puzzly",
+      "low-conflict",
+      "award-winner"
+    ]
+  },
+  {
+    "id": "calico",
+    "title": "Calico",
+    "players": "1\u20134",
+    "playtime": "30\u201345 min",
+    "complexity": 2.3,
+    "mechanics": [
+      "tile-laying",
+      "pattern-building"
+    ],
+    "theme": "cozy/cats",
+    "tags": [
+      "family",
+      "puzzly",
+      "tight"
+    ]
+  },
+  {
+    "id": "meadow",
+    "title": "Meadow",
+    "players": "1\u20134",
+    "playtime": "60\u201390 min",
+    "complexity": 2.6,
+    "mechanics": [
+      "set-collection",
+      "tableau"
+    ],
+    "theme": "nature",
+    "tags": [
+      "peaceful",
+      "puzzly"
+    ]
+  },
+  {
+    "id": "planet",
+    "title": "Planet",
+    "players": "2\u20134",
+    "playtime": "30\u201345 min",
+    "complexity": 1.8,
+    "mechanics": [
+      "tile-laying",
+      "drafting"
+    ],
+    "theme": "nature/earth",
+    "tags": [
+      "family",
+      "3d-gimmick"
+    ]
+  },
+  {
+    "id": "parks",
+    "title": "Parks",
+    "players": "1\u20135",
+    "playtime": "45\u201360 min",
+    "complexity": 2.2,
+    "mechanics": [
+      "set-collection",
+      "worker-movement"
+    ],
+    "theme": "national-parks",
+    "tags": [
+      "nature",
+      "peaceful"
+    ]
+  },
+  {
+    "id": "trailblazers",
+    "title": "Trailblazers",
+    "players": "1\u20138",
+    "playtime": "10\u201320 min",
+    "complexity": 1.9,
+    "mechanics": [
+      "route-building",
+      "drafting"
+    ],
+    "theme": "outdoors",
+    "tags": [
+      "portable",
+      "filler"
+    ]
+  },
+  {
+    "id": "floriferous",
+    "title": "Floriferous",
+    "players": "1\u20134",
+    "playtime": "20\u201340 min",
+    "complexity": 1.7,
+    "mechanics": [
+      "set-collection"
+    ],
+    "theme": "flowers",
+    "tags": [
+      "peaceful",
+      "family"
+    ]
+  },
+  {
+    "id": "sushigo",
+    "title": "Sushi Go!",
+    "players": "2\u20135",
+    "playtime": "15\u201320 min",
+    "complexity": 1.2,
+    "mechanics": [
+      "drafting",
+      "set-collection"
+    ],
+    "theme": "food",
+    "tags": [
+      "party",
+      "filler",
+      "family"
+    ]
+  },
+  {
+    "id": "crystal-palace",
+    "title": "Crystal Palace",
+    "players": "2\u20135",
+    "playtime": "90\u2013150 min",
+    "complexity": 3.7,
+    "mechanics": [
+      "dice-placement",
+      "economy"
+    ],
+    "theme": "victorian/steampunk",
+    "tags": [
+      "deep-cut",
+      "strategy"
+    ]
+  },
+  {
+    "id": "pipeline",
+    "title": "Pipeline",
+    "players": "2\u20134",
+    "playtime": "90\u2013150 min",
+    "complexity": 4.0,
+    "mechanics": [
+      "network-building",
+      "market"
+    ],
+    "theme": "industry",
+    "tags": [
+      "heavy",
+      "strategy"
+    ]
+  },
+  {
+    "id": "estates",
+    "title": "The Estates",
+    "players": "2\u20135",
+    "playtime": "40\u201360 min",
+    "complexity": 2.7,
+    "mechanics": [
+      "auction",
+      "area-majority"
+    ],
+    "theme": "building",
+    "tags": [
+      "mean",
+      "interactive",
+      "deep-cut"
+    ]
+  },
+  {
+    "id": "brass-birmingham",
+    "title": "Brass: Birmingham",
+    "players": "2\u20134",
+    "playtime": "120\u2013180 min",
+    "complexity": 3.9,
+    "mechanics": [
+      "hand-management",
+      "network/economy"
+    ],
+    "theme": "industrial",
+    "tags": [
+      "heavy",
+      "top-100"
+    ]
+  },
+  {
+    "id": "lisboa",
+    "title": "Lisboa",
+    "players": "1\u20134",
+    "playtime": "120\u2013180 min",
+    "complexity": 4.3,
+    "mechanics": [
+      "card-driven",
+      "economy"
+    ],
+    "theme": "reconstruction",
+    "tags": [
+      "heavy",
+      "lacerda"
+    ]
+  },
+  {
+    "id": "everdell",
+    "title": "Everdell",
+    "players": "1\u20134",
+    "playtime": "40\u2013100 min",
+    "complexity": 2.8,
+    "mechanics": [
+      "worker-placement",
+      "tableau"
+    ],
+    "theme": "woodland",
+    "tags": [
+      "beautiful",
+      "showpiece"
+    ]
+  },
+  {
+    "id": "foundations-rome",
+    "title": "Foundations of Rome",
+    "players": "2\u20134",
+    "playtime": "60\u201390 min",
+    "complexity": 2.3,
+    "mechanics": [
+      "tile-placement",
+      "income"
+    ],
+    "theme": "rome",
+    "tags": [
+      "miniatures",
+      "showpiece"
+    ]
+  },
+  {
+    "id": "tsuro-phoenix",
+    "title": "Tsuro: Phoenix Rising",
+    "players": "2\u20138",
+    "playtime": "20\u201340 min",
+    "complexity": 1.7,
+    "mechanics": [
+      "path-building",
+      "tile-placement"
+    ],
+    "theme": "fantasy",
+    "tags": [
+      "showpiece",
+      "family"
+    ]
+  },
+  {
+    "id": "tapestry",
+    "title": "Tapestry",
+    "players": "1\u20135",
+    "playtime": "90\u2013120 min",
+    "complexity": 2.9,
+    "mechanics": [
+      "engine-building",
+      "tracks"
+    ],
+    "theme": "civilization",
+    "tags": [
+      "showpiece",
+      "euro"
+    ]
+  }
+]
