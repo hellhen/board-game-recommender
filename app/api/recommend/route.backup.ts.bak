@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
     specs: { players: g.players || null, playtime: g.playtime || null, complexity: g.complexity ?? null },
     mechanics: g.mechanics || [],
     theme: g.theme || '',
-    price: { amount: null, store: null, url: null },
+    price: { amount: null as any, store: null, url: null },
     alternates: games.slice(3,8).map(x=>x.id).slice(0,3)
   }));
 
