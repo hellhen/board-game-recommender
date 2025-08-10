@@ -11,6 +11,10 @@
     "fetch:bgg": "tsx scripts/fetch-bgg-games.ts",
     "db:manage": "tsx scripts/manage-database.ts",
     "import:simple": "tsx scripts/simple-bgg-import.ts",
+    "import:careful": "tsx scripts/careful-bgg-import.ts",
+    "find:games": "tsx scripts/find-valid-games.ts",
+    "find:missing": "tsx scripts/find-missing-games.ts",
+    "analyze:top1500": "tsx scripts/analyze-top1500.ts",
     "setup:db": "tsx scripts/setup-database-policies.ts",
     "update:bgg": "tsx scripts/update-games-with-bgg.ts"
   },

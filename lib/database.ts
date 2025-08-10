@@ -3,17 +3,46 @@ import type { Game, UserRecommendation, GamePrice } from './supabase';
 
 // Games
 export async function getAllGames(): Promise<Game[]> {
-  const { data, error } = await supabase
-    .from('games')
-    .select('*')
-    .order('title');
+  console.log('🔍 getAllGames() called - fetching all games with pagination');
   
-  if (error) {
-    console.error('Error fetching games:', error);
-    return [];
+  const allGames: Game[] = [];
+  let from = 0;
+  const batchSize = 1000;
+  let hasMore = true;
+  
+  while (hasMore) {
+    console.log(`🔍 Fetching batch: ${from} to ${from + batchSize - 1}`);
+    
+    const { data, error } = await supabase
+      .from('games')
+      .select('*')
+      .order('title')
+      .range(from, from + batchSize - 1);
+    
+    if (error) {
+      console.error(`Error fetching games batch ${from}-${from + batchSize - 1}:`, error);
+      break;
+    }
+    
+    if (!data || data.length === 0) {
+      hasMore = false;
+      break;
+    }
+    
+    allGames.push(...data);
+    console.log(`🔍 Fetched ${data.length} games, total so far: ${allGames.length}`);
+    
+    // If we got less than the batch size, we've reached the end
+    if (data.length < batchSize) {
+      hasMore = false;
+    } else {
+      from += batchSize;
+    }
   }
   
-  return data || [];
+  console.log(`🔍 getAllGames() completed - returning ${allGames.length} games total`);
+  
+  return allGames;
 }
 
 export async function searchGames(query: string, limit: number = 10): Promise<Game[]> {
