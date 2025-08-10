@@ -174,28 +174,28 @@ export default function Home() {
         <div className="space-y-6">
           <div className="text-center mb-8">
             <h2 className="heading-secondary mb-2">My Verdict</h2>
-            <p className="text-slate-600 dark:text-slate-400">
+            <p style={{color: '#e8d5be'}}>
               Three games that will actually improve your tragic game collection. Try not to mess this up.
             </p>
           </div>
 
           <div className="grid gap-6">
             {recs.map((rec, i) => (
-              <div key={i} className="card game-card group hover:scale-[1.02] transition-all duration-300">
+              <div key={i} className="card group hover:scale-[1.02] transition-all duration-300">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-wine-500 to-wine-600 text-white font-bold text-sm">
                         {i + 1}
                       </span>
-                      <h3 className="text-2xl font-bold text-slate-800 dark:text-slate-200 group-hover:text-wine-600 transition-colors">
+                      <h3 className="text-2xl font-bold group-hover:text-gold-300 transition-colors" style={{color: '#e8d5be'}}>
                         {rec.title}
                       </h3>
                     </div>
                     
                     {rec.specs?.complexity && (
                       <div className="flex items-center gap-2 mb-3">
-                        <span className="text-xs font-medium text-slate-500">Complexity:</span>
+                        <span className="text-xs font-medium" style={{color: '#e8d5be'}}>Complexity:</span>
                         <div className="flex items-center">
                           {[1,2,3,4,5].map((level) => (
                             <div
@@ -203,12 +203,12 @@ export default function Home() {
                               className={clsx(
                                 "w-3 h-3 rounded-full mr-1",
                                 level <= (rec.specs?.complexity || 0) 
-                                  ? "bg-gradient-to-r from-orange-400 to-red-500" 
-                                  : "bg-slate-200 dark:bg-slate-700"
+                                  ? "bg-gradient-to-r from-wine-500 to-wine-600 shadow-sm" 
+                                  : "bg-wine-600/40 border border-wine-500/60"
                               )}
                             />
                           ))}
-                          <span className="ml-2 text-sm font-medium text-slate-600 dark:text-slate-400">
+                          <span className="ml-2 text-sm font-medium" style={{color: '#e8d5be'}}>
                             {rec.specs.complexity}/5
                           </span>
                         </div>
@@ -218,14 +218,14 @@ export default function Home() {
                 </div>
 
                 {/* Sommelier Pitch */}
-                <div className="mb-4 p-4 rounded-2xl bg-gradient-to-r from-wine-50 to-orange-50 dark:from-wine-950/20 dark:to-orange-950/20 border border-wine-100 dark:border-wine-800/30">
+                <div className="mb-4 p-4 rounded-2xl bg-wine-800/20 border border-wine-600/30">
                   <div className="flex items-start gap-3">
                     <span className="text-2xl animate-float">🍷</span>
                     <div>
-                      <p className="font-medium text-wine-800 dark:text-wine-200 italic leading-relaxed">
+                      <p className="font-medium italic leading-relaxed" style={{color: '#e8d5be'}}>
                         "{rec.sommelierPitch}"
                       </p>
-                      <span className="text-xs text-wine-600 dark:text-wine-400 font-medium">
+                      <span className="text-xs font-medium" style={{color: '#c4a882'}}>
                         — Your Sassy Sommelier
                       </span>
                     </div>
@@ -234,11 +234,11 @@ export default function Home() {
 
                 {/* Why it fits */}
                 <div className="mb-4">
-                  <h4 className="font-semibold text-slate-700 dark:text-slate-300 mb-2">Why this is perfect for you:</h4>
+                  <h4 className="font-semibold mb-2" style={{color: '#e8d5be'}}>Why this is perfect for you:</h4>
                   <ul className="space-y-1">
                     {rec.whyItFits?.map((reason, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-sm text-slate-600 dark:text-slate-400">
-                        <span className="text-wine-500 font-bold mt-0.5">•</span>
+                      <li key={idx} className="flex items-start gap-2 text-sm" style={{color: '#e8d5be'}}>
+                        <span className="text-wine-400 font-bold mt-0.5">•</span>
                         <span>{reason}</span>
                       </li>
                     ))}
@@ -246,11 +246,11 @@ export default function Home() {
                 </div>
 
                 {/* Game specs */}
-                <div className="flex flex-wrap gap-4 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl">
+                <div className="flex flex-wrap gap-4 p-4 bg-wine-800/10 border border-wine-600/20 rounded-2xl">
                   {rec.specs?.players && (
                     <div className="flex items-center gap-2">
                       <span className="text-lg">👥</span>
-                      <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                      <span className="text-sm font-medium" style={{color: '#e8d5be'}}>
                         {rec.specs.players}
                       </span>
                     </div>
@@ -258,7 +258,7 @@ export default function Home() {
                   {rec.specs?.playtime && (
                     <div className="flex items-center gap-2">
                       <span className="text-lg">⏱</span>
-                      <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                      <span className="text-sm font-medium" style={{color: '#e8d5be'}}>
                         {rec.specs.playtime}
                       </span>
                     </div>
@@ -266,7 +266,7 @@ export default function Home() {
                   {rec.theme && (
                     <div className="flex items-center gap-2">
                       <span className="text-lg">🎨</span>
-                      <span className="text-sm font-medium text-slate-700 dark:text-slate-300 capitalize">
+                      <span className="text-sm font-medium capitalize" style={{color: '#e8d5be'}}>
                         {rec.theme}
                       </span>
                     </div>
@@ -275,8 +275,8 @@ export default function Home() {
 
                 {/* Alternates */}
                 {rec.alternates && rec.alternates.length > 0 && (
-                  <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
-                    <p className="text-xs font-medium text-slate-500 mb-2">
+                  <div className="mt-4 pt-4 border-t border-wine-600/30">
+                    <p className="text-xs font-medium mb-2" style={{color: '#c4a882'}}>
                       If you're feeling adventurous, also consider:
                     </p>
                     <div className="flex flex-wrap gap-2">
@@ -294,9 +294,9 @@ export default function Home() {
 
           {/* Call to action */}
           <div className="text-center mt-12">
-            <div className="card card-highlight">
-              <h3 className="heading-secondary mb-3">Satisfied with my impeccable taste?</h3>
-              <p className="text-slate-600 dark:text-slate-400 mb-4">
+            <div className="card">
+              <h3 className="heading-secondary mb-3" style={{color: '#e8d5be'}}>Satisfied with my impeccable taste?</h3>
+              <p className="mb-4" style={{color: '#e8d5be'}}>
                 Of course you are. Now stop browsing and go play something. 
                 Your games are waiting, and so is the fun you've been putting off.
               </p>
