@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 import { z } from 'zod';
-import { ResponseSchema, SommelierResponse } from '../../../lib/schema';
-import { getAllGames, searchGames } from '../../../lib/database';
-import { SYSTEM_PROMPT } from '../../../lib/prompt';
+import { ResponseSchema, SommelierResponse } from '@/lib/schema';
+import { getAllGames, searchGames } from '@/lib/database';
+import { SYSTEM_PROMPT } from '@/lib/prompt';
 
 // Fallback function for when OpenAI is not available
 async function getFallbackRecommendations(prompt: string): Promise<SommelierResponse> {
@@ -97,56 +97,9 @@ function generateFallbackPitch(prompt: string, game: any): string {
   return `A perfectly balanced gem that delivers exactly what your table needs tonight.`;
 }
 
-// Smart pre-filtering to reduce dataset size
-function filterRelevantGames(games: any[], prompt: string, limit: number = 25): any[] {
-  const p = prompt.toLowerCase();
-  
-  // Score games for relevance
-  const scored = games.map(game => ({
-    ...game,
-    relevanceScore: calculateRelevanceScore(game, p)
-  }));
-  
-  // Sort by relevance and take the top matches
-  return scored
-    .sort((a, b) => b.relevanceScore - a.relevanceScore)
-    .slice(0, limit);
-}
-
-function calculateRelevanceScore(game: any, prompt: string): number {
-  let score = 0;
-  
-  // Theme matching
-  if (game.theme && prompt.includes(game.theme.toLowerCase())) score += 3;
-  if (game.title && prompt.includes(game.title.toLowerCase())) score += 5;
-  
-  // Tags matching
-  if (game.tags) {
-    game.tags.forEach((tag: string) => {
-      if (prompt.includes(tag.toLowerCase())) score += 2;
-    });
-  }
-  
-  // Mechanics matching
-  if (game.mechanics) {
-    game.mechanics.forEach((mechanic: string) => {
-      if (prompt.includes(mechanic.replace('-', ' '))) score += 1;
-    });
-  }
-  
-  // Complexity preferences
-  if (/family|easy|light|simple/.test(prompt) && game.complexity && game.complexity <= 2.5) score += 2;
-  if (/heavy|complex|deep|strategic/.test(prompt) && game.complexity && game.complexity >= 3.5) score += 2;
-  
-  return score;
-}
-
 export async function POST(req: NextRequest) {
-  let userPrompt = '';
-  
   try {
     const { prompt } = await req.json();
-    userPrompt = prompt;
     
     if (!prompt || typeof prompt !== 'string') {
       return NextResponse.json(
@@ -161,7 +114,7 @@ export async function POST(req: NextRequest) {
 
     if (!openaiApiKey || openaiApiKey === 'your_openai_api_key_here') {
       console.log('No OpenAI API key found, using fallback');
-      const fallbackResponse = await getFallbackRecommendations(userPrompt);
+      const fallbackResponse = await getFallbackRecommendations(prompt);
       return NextResponse.json(fallbackResponse);
     }
 
@@ -174,19 +127,17 @@ export async function POST(req: NextRequest) {
       }, { status: 500 });
     }
 
-    // Pre-filter games for relevance to improve speed and accuracy
-    const relevantGames = filterRelevantGames(allGames, userPrompt, 25);
-    
-    // Prepare games context for the LLM (smaller, more relevant sample)
-    const gamesContext = relevantGames.map(game => ({
+    // Prepare games context for the LLM (sample of games to avoid token limits)
+    const gamesSample = allGames.slice(0, 50); // Limit to prevent token overflow
+    const gamesContext = gamesSample.map(game => ({
       id: game.id,
       title: game.title,
       players: game.players,
       playtime: game.playtime,
       complexity: game.complexity,
-      mechanics: game.mechanics?.slice(0, 3), // Limit mechanics
+      mechanics: game.mechanics,
       theme: game.theme,
-      tags: game.tags?.slice(0, 3) // Limit tags
+      tags: game.tags
     }));
 
     // Initialize OpenAI
@@ -194,23 +145,22 @@ export async function POST(req: NextRequest) {
       apiKey: openaiApiKey,
     });
 
-    // Generate LLM response with optimized settings
+    // Generate LLM response
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini', // Fast, cost-effective model
+      model: model,
       messages: [
         { role: 'system', content: SYSTEM_PROMPT },
         { 
           role: 'user', 
-          content: `User request: "${userPrompt}"
+          content: `User request: "${prompt}"
 
-Available games (sample):
-${JSON.stringify(gamesContext)}
+Available games in database (sample):
+${JSON.stringify(gamesContext, null, 2)}
 
-Recommend 3 games from this list that best match the request. Respond with valid JSON.` 
+Please recommend 3 games from this database that best match the user's request. Use the exact game IDs from the database. Respond with valid JSON matching the expected schema.` 
         }
       ],
-      temperature: 0.7, // Slightly more deterministic for speed
-      max_tokens: 1500, // Limit response size
+      temperature: 0.8,
       response_format: { type: 'json_object' }
     });
 
@@ -220,24 +170,20 @@ Recommend 3 games from this list that best match the request. Respond with valid
       parsedResponse = JSON.parse(responseText) as SommelierResponse;
     } catch (parseError) {
       console.error('Failed to parse OpenAI response, using fallback');
-      const fallbackResponse = await getFallbackRecommendations(userPrompt);
-      return NextResponse.json(fallbackResponse);
+      return NextResponse.json(await getFallbackRecommendations(prompt));
     }
 
     // Validate the response structure
     const validationResult = ResponseSchema.safeParse(parsedResponse);
     if (!validationResult.success) {
       console.error('Invalid response schema, using fallback');
-      const fallbackResponse = await getFallbackRecommendations(userPrompt);
-      return NextResponse.json(fallbackResponse);
+      return NextResponse.json(await getFallbackRecommendations(prompt));
     }
 
     // Validate that recommended games exist in database
     const validatedRecommendations = [];
     for (const rec of validationResult.data.recommendations) {
-      // Check both relevant games and all games
-      const gameExists = relevantGames.find(g => g.id === rec.id || g.title === rec.title) ||
-                        allGames.find(g => g.id === rec.id || g.title === rec.title);
+      const gameExists = allGames.find(g => g.id === rec.id || g.title === rec.title);
       if (gameExists) {
         validatedRecommendations.push({
           ...rec,
@@ -254,7 +200,7 @@ Recommend 3 games from this list that best match the request. Respond with valid
     // If we don't have enough valid recommendations, fall back
     if (validatedRecommendations.length < 2) {
       console.log('LLM returned insufficient valid games, using fallback');
-      const fallbackResponse = await getFallbackRecommendations(userPrompt);
+      const fallbackResponse = await getFallbackRecommendations(prompt);
       return NextResponse.json(fallbackResponse);
     }
 
@@ -270,7 +216,7 @@ Recommend 3 games from this list that best match the request. Respond with valid
     
     // Fall back to local recommendations on any error
     try {
-      const fallbackResponse = await getFallbackRecommendations(userPrompt || 'general recommendation');
+      const fallbackResponse = await getFallbackRecommendations(prompt);
       return NextResponse.json(fallbackResponse);
     } catch (fallbackError) {
       console.error('Fallback also failed:', fallbackError);

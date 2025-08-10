@@ -49,7 +49,7 @@ export default function Home() {
         />
         <div className="mt-3 flex gap-2">
           <button className={clsx('button', loading && 'opacity-60')} disabled={loading}>
-            {loading ? 'Decanting…' : 'Recommend 3 Games'}
+            {loading ? 'Sommelier is selecting... 🍷' : 'Recommend 3 Games'}
           </button>
           <span className="chip" onClick={()=>setPrompt(prev=>prev + ' Prefer short teach.')}>Short teach</span>
           <span className="chip" onClick={()=>setPrompt(prev=>prev + ' Deep strategic.')}>More strategic</span>
@@ -58,6 +58,16 @@ export default function Home() {
       </form>
 
       {error && <div className="card border-red-300 text-red-700">{error}</div>}
+
+      {loading && (
+        <div className="card bg-blue-50 border-blue-200 text-blue-800">
+          <div className="flex items-center gap-3">
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+            <span>The sommelier is carefully analyzing your preferences and selecting the perfect games...</span>
+          </div>
+          <p className="text-sm mt-2 opacity-70">This may take 5-15 seconds for the best recommendations.</p>
+        </div>
+      )}
 
       {recs && (
         <div className="grid gap-4">

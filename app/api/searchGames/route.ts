@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { searchGames } from '@/lib/database';
+import { searchGames } from '../../../lib/database';
 
 export async function POST(req: NextRequest) {
   try {
