@@ -22,7 +22,7 @@ function scoreGame(prompt: string, g: any) {
 
   // basic time preference
   if (/under 60|short|quick/.test(p) && /\d+–\d+ min/.test(g.playtime||'')) {
-    const [a,b] = (g.playtime||'0–0').split('–').map(x => parseInt(x.replace(/[^0-9]/g,'')));
+    const [a,b] = (g.playtime||'0–0').split('–').map((x: string) => parseInt(x.replace(/[^0-9]/g,'')));
     if (b && b <= 60) s += 1.5;
   }
 
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
     specs: { players: g.players || null, playtime: g.playtime || null, complexity: g.complexity ?? null },
     mechanics: g.mechanics || [],
     theme: g.theme || '',
-    price: { amount: None as any, store: null, url: null },
+    price: { amount: null, store: null, url: null },
     alternates: games.slice(3,8).map(x=>x.id).slice(0,3)
   }));
 
