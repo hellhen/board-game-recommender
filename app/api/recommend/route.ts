@@ -86,15 +86,21 @@ function scoreGame(prompt: string, game: any): number {
 
 function generateFallbackPitch(prompt: string, game: any): string {
   if (game.theme?.includes('nature')) {
-    return `A serene nature-themed experience that'll scratch that Cascadia itch without overwhelming anyone.`;
+    return `Listen, I know you think you're "unique" for loving nature games, but this one actually deserves your pretentious tree-hugging attention.`;
   }
   if (game.tags?.includes('party')) {
-    return `Pure social gold – easy to teach, impossible to stop laughing at.`;
+    return `This will turn your awkward gathering into pure chaos—the good kind that makes people forget you're usually boring at parties.`;
   }
   if (game.complexity && game.complexity >= 3.5) {
-    return `A deliciously crunchy puzzle that transforms decision-making into an art form.`;
+    return `Finally, something that won't insult your supposedly massive brain. Prepare to discover you're not as strategic as you think.`;
   }
-  return `A perfectly balanced gem that delivers exactly what your table needs tonight.`;
+  if (/family|parent|kid/.test(prompt.toLowerCase())) {
+    return `Your kids will love it, you'll tolerate it, and somehow everyone wins. Miraculous, really.`;
+  }
+  if (/date|couple|romantic/.test(prompt.toLowerCase())) {
+    return `This will either bring you closer together or reveal exactly how competitive and petty you both are. Either way, entertaining.`;
+  }
+  return `Look, I could give you some generic fluff, but honestly? This game is going to surprise you in ways your basic gaming palate isn't ready for.`;
 }
 
 // Smart pre-filtering to reduce dataset size

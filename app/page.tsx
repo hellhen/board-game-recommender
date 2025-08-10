@@ -21,11 +21,11 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
 
   const sassyPrompts = [
-    "Something that won't put my partner to sleep...",
-    "I need a game that makes me look smart",
-    "Help me crush my friends (lovingly)",
-    "Date night but make it competitive",
-    "Family game night without the drama"
+    "I need something that makes me look smarter than I am",
+    "Help me destroy my friends (but like, nicely)",
+    "Date night but I'm secretly competitive AF",
+    "My family argues during games—fix this",
+    "Something strategic that won't melt my brain"
   ];
 
   async function onSubmit(e: React.FormEvent) {
@@ -59,17 +59,17 @@ export default function Home() {
           � Board Game Sassy Sommelier
         </h1>
         <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
-          Listen up, darling. I've got <span className="text-sassy font-semibold">impeccable taste</span> in board games, 
-          and I'm not afraid to tell you exactly what you need. 
-          Spill your gaming situation, and I'll serve you three{' '}
-          <em className="font-medium">perfect</em> picks.
+          Look, I've got <span className="text-sassy font-semibold">exquisite taste</span> in board games, 
+          and frankly, you probably don't. But that's fine—I'm here to fix that. 
+          Tell me what you <em>think</em> you want, and I'll tell you what you{' '}
+          <em className="font-medium text-wine-600">actually</em> need.
         </p>
         <div className="flex items-center justify-center gap-2 mt-4 text-sm text-slate-500">
-          <span>✨ Powered by AI</span>
-          <span>•</span>
-          <span>🎯 Zero BS recommendations</span>
-          <span>•</span>
           <span>🔥 Brutally honest</span>
+          <span>•</span>
+          <span>🎯 Zero sugar-coating</span>
+          <span>•</span>
+          <span>✨ Devastatingly accurate</span>
         </div>
       </div>
 
@@ -83,7 +83,7 @@ export default function Home() {
             className="input h-32 resize-none"
             value={prompt}
             onChange={e => setPrompt(e.target.value)}
-            placeholder="Be specific. 'Fun family game' tells me nothing. Try 'Need something strategic but teachable for my competitive siblings who get bored easily...'"
+            placeholder="Be brutally specific. 'Something fun' is useless. Try 'I want to prove I'm smarter than my cocky brother-in-law without him rage-quitting...'"
           />
         </div>
 
@@ -158,11 +158,11 @@ export default function Home() {
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-wine-800 dark:text-wine-200 mb-1">
-                Hold your horses, I'm curating...
+                Patience, darling. I'm being thorough.
               </h3>
               <p className="text-sm text-wine-600 dark:text-wine-300">
-                Analyzing your taste level and cross-referencing with my impeccable database of games. 
-                This might take 10-15 seconds because I'm <em>thorough</em>.
+                I'm sifting through my vast knowledge to find games that won't disappoint your obviously discerning taste. 
+                This takes 10-15 seconds because <em>quality</em> can't be rushed, unlike your last gaming purchase.
               </p>
             </div>
           </div>
@@ -173,9 +173,9 @@ export default function Home() {
       {recs && recs.length > 0 && (
         <div className="space-y-6">
           <div className="text-center mb-8">
-            <h2 className="heading-secondary mb-2">Your Sommelier's Selections</h2>
+            <h2 className="heading-secondary mb-2">My Verdict</h2>
             <p className="text-slate-600 dark:text-slate-400">
-              Three games I personally guarantee will not disappoint. You're welcome.
+              Three games that will actually improve your tragic game collection. Try not to mess this up.
             </p>
           </div>
 
