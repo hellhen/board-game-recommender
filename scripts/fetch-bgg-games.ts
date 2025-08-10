@@ -284,12 +284,6 @@ export async function expandDatabaseWithBGG(gameCount: number = 50): Promise<voi
   let skippedCount = 0;
 
   try {
-    // Temporarily disable RLS for imports (requires service role)
-    console.log('Setting up database permissions...');
-    await supabase.rpc('exec', { 
-      sql: 'ALTER TABLE games DISABLE ROW LEVEL SECURITY;' 
-    });
-
     // Get a mix of popular games
     const hotGameIds = await fetcher.fetchTopGames(Math.floor(gameCount / 2));
     const rankedGameIds = await fetcher.fetchGamesByRank(1, Math.ceil(gameCount / 2));
@@ -337,13 +331,19 @@ export async function expandDatabaseWithBGG(gameCount: number = 50): Promise<voi
           image_url: gameData.image_url
         };
 
-        // Insert into database (bypass RLS by using service role)
+        // Insert into database using service role
         const { error } = await supabase
           .from('games')
           .insert(dbGame);
 
         if (error) {
           console.error(`Error inserting game ${gameId}:`, error);
+          
+          // If this is an RLS error, provide helpful guidance
+          if (error.code === '42501') {
+            console.log('\n⚠️  RLS Policy Error: Run "npm run setup:db" to fix database policies');
+            break;
+          }
         } else {
           console.log(`✓ Inserted: ${gameData.title}`);
           insertedCount++;
@@ -370,19 +370,13 @@ export async function expandDatabaseWithBGG(gameCount: number = 50): Promise<voi
     console.log(`New games added: ${insertedCount}`);
     console.log(`Skipped (already existed): ${skippedCount}`);
 
+    if (insertedCount === 0 && skippedCount === 0) {
+      console.log('\n💡 If you\'re seeing permission errors, run: npm run setup:db sql');
+    }
+
   } catch (error) {
     console.error('BGG expansion failed:', error);
     throw error;
-  } finally {
-    // Re-enable RLS
-    try {
-      console.log('Restoring database security policies...');
-      await supabase.rpc('exec', { 
-        sql: 'ALTER TABLE games ENABLE ROW LEVEL SECURITY;' 
-      });
-    } catch (error) {
-      console.warn('Warning: Could not restore RLS policies:', error);
-    }
   }
 }
 

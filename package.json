@@ -9,7 +9,9 @@
     "lint": "next lint",
     "migrate:games": "tsx scripts/migrate-games.ts",
     "fetch:bgg": "tsx scripts/fetch-bgg-games.ts",
-    "db:manage": "tsx scripts/manage-database.ts"
+    "db:manage": "tsx scripts/manage-database.ts",
+    "import:simple": "tsx scripts/simple-bgg-import.ts",
+    "setup:db": "tsx scripts/setup-database-policies.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.54.0",

@@ -2,6 +2,27 @@
 
 This document explains how to expand your board game database by fetching games from BoardGameGeek (BGG).
 
+## Setup Required
+
+Before running BGG imports, you need to set up proper database permissions:
+
+### 1. Test Current Access
+```bash
+npm run setup:db
+```
+
+### 2. Fix Database Policies (if needed)
+If the test shows permission errors, generate the SQL fix:
+```bash
+npm run setup:db sql
+```
+
+Then:
+1. Copy the generated SQL
+2. Go to your Supabase dashboard → SQL Editor
+3. Paste and run the SQL
+4. Test again with `npm run setup:db`
+
 ## Available Scripts
 
 ### Fetch BGG Games
