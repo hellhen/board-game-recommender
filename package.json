@@ -7,13 +7,17 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "migrate:games": "tsx scripts/migrate-games.ts"
+    "migrate:games": "tsx scripts/migrate-games.ts",
+    "fetch:bgg": "tsx scripts/fetch-bgg-games.ts",
+    "db:manage": "tsx scripts/manage-database.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.54.0",
+    "@types/xml2js": "^0.4.14",
     "@vercel/analytics": "1.3.1",
     "ai": "3.2.25",
     "autoprefixer": "10.4.20",
+    "axios": "^1.11.0",
     "clsx": "2.1.1",
     "dotenv": "^17.2.1",
     "lodash": "4.17.21",
@@ -23,6 +27,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "tailwindcss": "3.4.7",
+    "xml2js": "^0.6.2",
     "zod": "3.23.8"
   },
   "devDependencies": {
