@@ -1,0 +1,266 @@
+{
+  "shareId": "W1rwAHem",
+  "title": "Board game recommendations for \"Help me destroy my friends (but like, nicely)...\"",
+  "prompt": "Help me destroy my friends (but like, nicely)",
+  "recommendations": [
+    {
+      "id": "7948cda2-5b6e-469e-b950-b80c01ff2814",
+      "title": "Catan",
+      "sommelierPitch": "Trade your way to victory, but watch your back when you’re on the road to monopolize the board!",
+      "whyItFits": [
+        "Classic resource management where friendly negotiations can quickly turn into backstabbing tactics. Perfect for those who like to play nice until it’s time to crush dreams."
+      ],
+      "specs": {
+        "players": "3–4",
+        "playtime": "60–120 min",
+        "complexity": 2.3
+      },
+      "mechanics": [
+        "dice-rolling",
+        "trading",
+        "modular-board"
+      ],
+      "theme": "medieval/exploration",
+      "price": {
+        "amount": null,
+        "store": null,
+        "url": null
+      },
+      "alternates": []
+    },
+    {
+      "id": "5686bd2b-5c76-493a-aa09-95b85c641a97",
+      "title": "Ticket to Ride",
+      "sommelierPitch": "All aboard for a delightful journey that will have your friends derailing each other's plans with a smile!",
+      "whyItFits": [
+        "On the surface, it’s all about connecting cities, but don’t be fooled—blocking routes can feel like a devious act of sabotage among friends."
+      ],
+      "specs": {
+        "players": "2–5 (best 4)",
+        "playtime": "30–60 min",
+        "complexity": 1.8
+      },
+      "mechanics": [
+        "connections",
+        "contracts",
+        "end-game-bonuses",
+        "hand-management",
+        "network-and-route-building"
+      ],
+      "theme": "strategy",
+      "price": {
+        "amount": null,
+        "store": null,
+        "url": null
+      },
+      "alternates": []
+    },
+    {
+      "id": "c697ec40-8457-4684-9cb4-3eaae08b17d8",
+      "title": "Cosmic Encounter",
+      "sommelierPitch": "The game where every alien has a secret power, and trust is just a temporary illusion—perfect for friendly betrayal!",
+      "whyItFits": [
+        "With each player having unique powers, alliances can shift quicker than friendships at a game night. Prepare for chaos wrapped in laughter!"
+      ],
+      "specs": {
+        "players": "3-5",
+        "playtime": "120 min",
+        "complexity": 2.6
+      },
+      "mechanics": [
+        "alliances",
+        "card-play-conflict-resolution",
+        "hand-management",
+        "interrupts",
+        "negotiation",
+        "prisoner's-dilemma",
+        "race",
+        "simultaneous-action-selection",
+        "take-that",
+        "trading",
+        "variable-player-powers"
+      ],
+      "theme": "Sci-Fi",
+      "price": {
+        "amount": null,
+        "store": null,
+        "url": null
+      },
+      "alternates": []
+    },
+    {
+      "id": "aa6e721b-6353-42b8-af63-24f494967859",
+      "title": "Saboteur",
+      "sommelierPitch": "Digging for gold has never been so treacherously fun; will you be the miner or the sneaky saboteur?",
+      "whyItFits": [
+        "Engage in a charming yet backstabbing race to riches, where your friends’ smiles may betray the daggers they’re hiding behind their backs."
+      ],
+      "specs": {
+        "players": "3-10",
+        "playtime": "30 min",
+        "complexity": 1.3
+      },
+      "mechanics": [
+        "hand-management",
+        "hidden-roles",
+        "hidden-victory-points",
+        "map-addition",
+        "network-and-route-building",
+        "score-and-reset-game",
+        "take-that",
+        "traitor-game"
+      ],
+      "theme": "Fantasy",
+      "price": {
+        "amount": null,
+        "store": null,
+        "url": null
+      },
+      "alternates": []
+    },
+    {
+      "id": "b2f9da96-822a-4f0b-b9d6-a09ff1021323",
+      "title": "Betrayal at House on the Hill",
+      "sommelierPitch": "Uncover haunted secrets with friends—until one of you turns into a backstabbing monster, literally!",
+      "whyItFits": [
+        "This game combines cooperative exploration with a twist of betrayal, ensuring that friendships are tested as ghosts and monsters emerge in the most delightful way."
+      ],
+      "specs": {
+        "players": "3-6",
+        "playtime": "60 min",
+        "complexity": 2.4
+      },
+      "mechanics": [
+        "dice-rolling",
+        "map-addition",
+        "modular-board",
+        "player-elimination",
+        "role-playing",
+        "storytelling",
+        "team-based-game",
+        "traitor-game",
+        "variable-player-powers"
+      ],
+      "theme": "Fantasy",
+      "price": {
+        "amount": null,
+        "store": null,
+        "url": null
+      },
+      "alternates": []
+    },
+    {
+      "id": "414bd32c-0711-4fab-8ee5-7c1a51af7301",
+      "title": "7 Wonders",
+      "sommelierPitch": "Build a civilization with your friends, while secretly eyeing their cities like a jealous neighbor with a lawn that’s too green!",
+      "whyItFits": [
+        "Drafting cards to build wonders is a delightful way to strategize, but watch out when your friends start eyeing your resources and plans with envy."
+      ],
+      "specs": {
+        "players": "2–7",
+        "playtime": "30 min",
+        "complexity": 2.3
+      },
+      "mechanics": [
+        "drafting",
+        "tableau-building"
+      ],
+      "theme": "ancient-civilizations",
+      "price": {
+        "amount": null,
+        "store": null,
+        "url": null
+      },
+      "alternates": []
+    },
+    {
+      "id": "87bdaf38-28fb-4ffe-b6da-d8fc4ea6ac89",
+      "title": "Power Grid",
+      "sommelierPitch": "It’s like Monopoly, but instead of buying hotels, you’re snatching up power plants and dousing your friends in spite!",
+      "whyItFits": [
+        "A strategic economic game where you can outmaneuver your friends in the battle for energy dominance, all while maintaining that sweet veneer of friendliness."
+      ],
+      "specs": {
+        "players": "2-6",
+        "playtime": "120 min",
+        "complexity": 3.2
+      },
+      "mechanics": [
+        "auction-/-bidding",
+        "auction:-turn-order-until-pass",
+        "catch-the-leader",
+        "income",
+        "market",
+        "network-and-route-building",
+        "turn-order:-stat-based",
+        "variable-set-up"
+      ],
+      "theme": "Economic",
+      "price": {
+        "amount": null,
+        "store": null,
+        "url": null
+      },
+      "alternates": []
+    },
+    {
+      "id": "2e7866dc-6062-4c31-8b4e-3293e6179504",
+      "title": "The Resistance",
+      "sommelierPitch": "A game of deception where trust is a commodity and betrayal is just a part of the strategy—cuz who needs friends when you have lies?",
+      "whyItFits": [
+        "Perfect for those who love to create intrigue amongst their group, as players must root out spies while trying not to betray their comrades (too much)."
+      ],
+      "specs": {
+        "players": "5-10",
+        "playtime": "30 min",
+        "complexity": 1.6
+      },
+      "mechanics": [
+        "hidden-roles",
+        "memory",
+        "roles-with-asymmetric-information",
+        "simultaneous-action-selection",
+        "team-based-game",
+        "traitor-game",
+        "voting"
+      ],
+      "theme": "Sci-Fi",
+      "price": {
+        "amount": null,
+        "store": null,
+        "url": null
+      },
+      "alternates": []
+    },
+    {
+      "id": "ac0f086c-f4be-439e-a67c-95b608fb600f",
+      "title": "Scythe",
+      "sommelierPitch": "Build your empire, crush your rivals, and sip tea while you do it—this is cutthroat strategy at its finest!",
+      "whyItFits": [
+        "This gorgeous game combines area control and engine-building, and your friends won’t know what hit them as you obliterate their dreams of victory!"
+      ],
+      "specs": {
+        "players": "1–5 (best 3)",
+        "playtime": "90–115 min",
+        "complexity": 3.5
+      },
+      "mechanics": [
+        "area-majority---influence",
+        "card-play-conflict-resolution",
+        "contracts",
+        "end-game-bonuses",
+        "force-commitment"
+      ],
+      "theme": "economy",
+      "price": {
+        "amount": null,
+        "store": null,
+        "url": null
+      },
+      "alternates": []
+    }
+  ],
+  "metadata": null,
+  "createdAt": "2025-08-13T06:25:43.791Z",
+  "viewCount": 2
+}

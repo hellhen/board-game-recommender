@@ -187,10 +187,14 @@ async function fetchBGGTopGames(existingIds: Set<string>): Promise<string[]> {
 async function testGameId(gameId: string): Promise<boolean> {
   try {
     await sleep(REQUEST_DELAY);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    
     const response = await fetch(`https://boardgamegeek.com/xmlapi2/thing?id=${gameId}`, {
-      timeout: 10000
+      signal: controller.signal
     });
     
+    clearTimeout(timeoutId);
     if (!response.ok) return false;
     
     const xmlData = await response.text();

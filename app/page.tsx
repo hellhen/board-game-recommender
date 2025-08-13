@@ -19,6 +19,9 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [recs, setRecs] = useState<Rec[] | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [shareLoading, setShareLoading] = useState(false);
+  const [originalPrompt, setOriginalPrompt] = useState<string>('');
 
   const sassyPrompts = [
     "I need something that makes me look smarter than I am",
@@ -33,6 +36,7 @@ export default function Home() {
     setLoading(true); 
     setError(null);
     setRecs(null);
+    setShareUrl(null);
     
     try {
       const res = await fetch('/api/recommend', { 
@@ -44,10 +48,56 @@ export default function Home() {
       const json = await res.json();
       if (!res.ok) throw new Error(JSON.stringify(json));
       setRecs(json.recommendations);
+      setOriginalPrompt(prompt); // Store the prompt used for this recommendation
     } catch (err: any) {
       setError(err.message || 'Error');
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function handleShare() {
+    if (!recs || !originalPrompt) return;
+    
+    setShareLoading(true);
+    try {
+      const response = await fetch('/api/share', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: originalPrompt,
+          recommendations: recs,
+          title: `Board game recommendations for "${originalPrompt.slice(0, 50)}..."`
+        })
+      });
+      
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error);
+      
+      setShareUrl(data.shareUrl);
+      
+      // Copy to clipboard automatically
+      try {
+        await navigator.clipboard.writeText(data.shareUrl);
+      } catch (clipboardError) {
+        console.log('Could not copy to clipboard automatically');
+      }
+      
+    } catch (error: any) {
+      setError(error.message || 'Failed to create shareable link');
+    } finally {
+      setShareLoading(false);
+    }
+  }
+
+  async function copyShareUrl() {
+    if (!shareUrl) return;
+    
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      // Could add a toast notification here
+    } catch (error) {
+      console.error('Failed to copy URL:', error);
     }
   }
 
@@ -56,7 +106,7 @@ export default function Home() {
       {/* Header */}
       <div className="text-center mb-12">
         <h1 className="heading-primary mb-4">
-          � Board Game Sassy Sommelier
+          🍷 Board Game Sassy Sommelier
         </h1>
         <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
           Look, I've got <span className="text-sassy font-semibold">exquisite taste</span> in board games, 
@@ -300,14 +350,70 @@ export default function Home() {
                 Of course you are. Now stop browsing and go play something. 
                 Your games are waiting, and so is the fun you've been putting off.
               </p>
-              <button 
-                onClick={() => { setRecs(null); setPrompt(''); }}
-                className="button"
-              >
-                🍷 Get More Recommendations
-              </button>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <button 
+                  onClick={() => { setRecs(null); setPrompt(''); setShareUrl(null); }}
+                  className="button"
+                >
+                  🍷 Get More Recommendations
+                </button>
+                <button
+                  onClick={handleShare}
+                  disabled={shareLoading}
+                  className={clsx(
+                    'button button-secondary flex items-center gap-2',
+                    shareLoading && 'opacity-60'
+                  )}
+                >
+                  {shareLoading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-wine-400/30 border-t-wine-400"></div>
+                      Creating link...
+                    </>
+                  ) : (
+                    <>
+                      <span>📤</span>
+                      Share These Picks
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
+
+          {/* Share URL Display */}
+          {shareUrl && (
+            <div className="text-center mt-6">
+              <div className="card bg-green-50 border-green-200 dark:bg-green-950/30 dark:border-green-800">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">✨</span>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">
+                      Perfect! Your recommendations are now shareable
+                    </h4>
+                    <p className="text-sm text-green-700 dark:text-green-300 mb-3">
+                      Anyone with this link can see your curated picks (and my devastatingly accurate commentary).
+                    </p>
+                    <div className="flex items-center gap-2 p-3 bg-white dark:bg-slate-800 rounded-lg border">
+                      <input
+                        type="text"
+                        value={shareUrl}
+                        readOnly
+                        className="flex-1 bg-transparent text-sm font-mono text-slate-600 dark:text-slate-300 outline-none"
+                      />
+                      <button
+                        onClick={copyShareUrl}
+                        className="button-secondary text-xs px-3 py-1"
+                        title="Copy to clipboard"
+                      >
+                        Copy
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
       {/* Footer */}

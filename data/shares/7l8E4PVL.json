@@ -1,0 +1,22 @@
+{
+  "shareId": "7l8E4PVL",
+  "title": "Test Share",
+  "prompt": "strategic games for two players",
+  "recommendations": [
+    {
+      "id": "test-game",
+      "title": "Test Game",
+      "sommelierPitch": "Great for testing",
+      "whyItFits": [
+        "Perfect for two"
+      ],
+      "specs": {
+        "players": "2",
+        "playtime": "30 min"
+      }
+    }
+  ],
+  "metadata": null,
+  "createdAt": "2025-08-13T06:23:19.662Z",
+  "viewCount": 2
+}
