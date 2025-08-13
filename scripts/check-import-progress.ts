@@ -41,8 +41,8 @@ async function checkImportProgress() {
     );
     
     // Find which games from 1500-2000 range are now in database
-    const importedGames = targetGameIds.filter(id => existingBggIds.has(id));
-    const stillMissing = targetGameIds.filter(id => !existingBggIds.has(id));
+    const importedGames = targetGameIds.filter((id: number) => existingBggIds.has(id));
+    const stillMissing = targetGameIds.filter((id: number) => !existingBggIds.has(id));
     
     console.log(`\n📈 Import Results:`);
     console.log(`✅ Successfully imported: ${importedGames.length} games`);
@@ -71,11 +71,11 @@ async function checkImportProgress() {
       
       // Show original game data for missing games
       const missingGamesWithDetails = missingGamesData.missing_games || [];
-      const stillMissingWithDetails = missingGamesWithDetails.filter(game => 
+      const stillMissingWithDetails = missingGamesWithDetails.filter((game: any) => 
         stillMissing.includes(game.bgg_id)
       );
       
-      stillMissingWithDetails.slice(0, 10).forEach(game => {
+      stillMissingWithDetails.slice(0, 10).forEach((game: any) => {
         console.log(`   #${game.rank.toString().padStart(4)} - ${game.name} (BGG ID: ${game.bgg_id})`);
       });
       

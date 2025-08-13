@@ -35,21 +35,21 @@ async function cleanupMissingGamesFile() {
     console.log(`📊 Found ${existingBggIds.size} games with BGG IDs in database`);
     
     // Filter out games that are already in database
-    const actuallyMissingIds = originalMissingIds.filter(id => !existingBggIds.has(id));
-    const alreadyImportedIds = originalMissingIds.filter(id => existingBggIds.has(id));
+    const actuallyMissingIds = originalMissingIds.filter((id: number) => !existingBggIds.has(id));
+    const alreadyImportedIds = originalMissingIds.filter((id: number) => existingBggIds.has(id));
     
     console.log(`✅ Games already imported: ${alreadyImportedIds.length}`);
     console.log(`❌ Games still missing: ${actuallyMissingIds.length}`);
     
     if (alreadyImportedIds.length > 0) {
       console.log(`🎯 Sample of already imported games (first 10):`);
-      alreadyImportedIds.slice(0, 10).forEach(id => {
+      alreadyImportedIds.slice(0, 10).forEach((id: number) => {
         console.log(`   BGG ID: ${id}`);
       });
     }
     
     // Update missing games data
-    const actuallyMissingGames = missingGamesData.missing_games?.filter(game => 
+    const actuallyMissingGames = missingGamesData.missing_games?.filter((game: any) => 
       actuallyMissingIds.includes(game.bgg_id)
     ) || [];
     
