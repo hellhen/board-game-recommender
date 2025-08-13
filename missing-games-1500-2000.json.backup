@@ -1,0 +1,2750 @@
+{
+  "total_missing": 304,
+  "total_in_range": 500,
+  "coverage_percentage": "1.0",
+  "generated_at": "2025-08-13T07:37:43.323Z",
+  "rank_range": "1500-2000",
+  "source": "BGG ranked games 1500-2000 (base games only)",
+  "missing_games": [
+    {
+      "bgg_id": 39953,
+      "rank": 1504,
+      "name": "A Game of Thrones: The Card Game",
+      "year": 2008,
+      "rating": 6.80419,
+      "votes": 6339
+    },
+    {
+      "bgg_id": 157526,
+      "rank": 1505,
+      "name": "Viceroy",
+      "year": 2014,
+      "rating": 6.78327,
+      "votes": 5757
+    },
+    {
+      "bgg_id": 164338,
+      "rank": 1506,
+      "name": "The Golden Ages",
+      "year": 2014,
+      "rating": 7.24529,
+      "votes": 2467
+    },
+    {
+      "bgg_id": 134253,
+      "rank": 1508,
+      "name": "Hostage Negotiator",
+      "year": 2015,
+      "rating": 6.78551,
+      "votes": 6166
+    },
+    {
+      "bgg_id": 202077,
+      "rank": 1509,
+      "name": "Deep Madness",
+      "year": 2018,
+      "rating": 7.80933,
+      "votes": 2108
+    },
+    {
+      "bgg_id": 249746,
+      "rank": 1510,
+      "name": "Nanty Narking",
+      "year": 2019,
+      "rating": 7.46,
+      "votes": 2081
+    },
+    {
+      "bgg_id": 18258,
+      "rank": 1511,
+      "name": "Mission: Red Planet",
+      "year": 2005,
+      "rating": 6.87822,
+      "votes": 4322
+    },
+    {
+      "bgg_id": 1261,
+      "rank": 1512,
+      "name": "Medina",
+      "year": 2001,
+      "rating": 7.02343,
+      "votes": 3315
+    },
+    {
+      "bgg_id": 316858,
+      "rank": 1513,
+      "name": "CloudAge",
+      "year": 2020,
+      "rating": 7.1937,
+      "votes": 2725
+    },
+    {
+      "bgg_id": 50768,
+      "rank": 1515,
+      "name": "Ninjato",
+      "year": 2011,
+      "rating": 7.15671,
+      "votes": 2751
+    },
+    {
+      "bgg_id": 191876,
+      "rank": 1516,
+      "name": "Ulm",
+      "year": 2016,
+      "rating": 7.01196,
+      "votes": 3445
+    },
+    {
+      "bgg_id": 225244,
+      "rank": 1517,
+      "name": "Ticket to Ride: Germany",
+      "year": 2017,
+      "rating": 7.58694,
+      "votes": 1912
+    },
+    {
+      "bgg_id": 367517,
+      "rank": 1518,
+      "name": "La Famiglia: The Great Mafia War",
+      "year": 2023,
+      "rating": 7.99193,
+      "votes": 1468
+    },
+    {
+      "bgg_id": 243759,
+      "rank": 1519,
+      "name": "Hellboy: The Board Game",
+      "year": 2019,
+      "rating": 7.73806,
+      "votes": 2053
+    },
+    {
+      "bgg_id": 159503,
+      "rank": 1520,
+      "name": "The Captain Is Dead",
+      "year": 2014,
+      "rating": 7.0535,
+      "votes": 3536
+    },
+    {
+      "bgg_id": 224821,
+      "rank": 1521,
+      "name": "One Deck Dungeon: Forest of Shadows",
+      "year": 2017,
+      "rating": 7.08694,
+      "votes": 3363
+    },
+    {
+      "bgg_id": 227456,
+      "rank": 1522,
+      "name": "Escape the Dark Castle",
+      "year": 2017,
+      "rating": 7.33496,
+      "votes": 4061
+    },
+    {
+      "bgg_id": 348220,
+      "rank": 1523,
+      "name": "Deep Rock Galactic: The Board Game",
+      "year": 2022,
+      "rating": 8.12491,
+      "votes": 1543
+    },
+    {
+      "bgg_id": 204836,
+      "rank": 1524,
+      "name": "Escape Room: The Game",
+      "year": 2016,
+      "rating": 6.88421,
+      "votes": 4348
+    },
+    {
+      "bgg_id": 7805,
+      "rank": 1526,
+      "name": "Fearsome Floors",
+      "year": 2003,
+      "rating": 6.66666,
+      "votes": 8435
+    },
+    {
+      "bgg_id": 345976,
+      "rank": 1527,
+      "name": "System Gateway (fan expansion for Android: Netrunner)",
+      "year": 2021,
+      "rating": 9.11805,
+      "votes": 841
+    },
+    {
+      "bgg_id": 300442,
+      "rank": 1529,
+      "name": "Trekking the World",
+      "year": 2020,
+      "rating": 7.05063,
+      "votes": 3343
+    },
+    {
+      "bgg_id": 205716,
+      "rank": 1530,
+      "name": "New Angeles",
+      "year": 2016,
+      "rating": 7.05082,
+      "votes": 3404
+    },
+    {
+      "bgg_id": 270871,
+      "rank": 1531,
+      "name": "Agemonia",
+      "year": 2024,
+      "rating": 8.95818,
+      "votes": 1058
+    },
+    {
+      "bgg_id": 113873,
+      "rank": 1532,
+      "name": "The Hunters: German U-Boats at War, 1939-43",
+      "year": 2013,
+      "rating": 7.73463,
+      "votes": 1826
+    },
+    {
+      "bgg_id": 151771,
+      "rank": 1537,
+      "name": "La Cosa Nostra",
+      "year": 2014,
+      "rating": 7.55318,
+      "votes": 1929
+    },
+    {
+      "bgg_id": 312859,
+      "rank": 1538,
+      "name": "Townsfolk Tussle",
+      "year": 2022,
+      "rating": 7.69812,
+      "votes": 1794
+    },
+    {
+      "bgg_id": 157001,
+      "rank": 1539,
+      "name": "Trains: Rising Sun",
+      "year": 2014,
+      "rating": 7.43639,
+      "votes": 1922
+    },
+    {
+      "bgg_id": 253759,
+      "rank": 1542,
+      "name": "Paint the Roses",
+      "year": 2022,
+      "rating": 7.19046,
+      "votes": 2778
+    },
+    {
+      "bgg_id": 38159,
+      "rank": 1543,
+      "name": "Ultimate Werewolf: Ultimate Edition",
+      "year": 2008,
+      "rating": 6.94959,
+      "votes": 4183
+    },
+    {
+      "bgg_id": 394,
+      "rank": 1544,
+      "name": "Kahuna",
+      "year": 1998,
+      "rating": 6.61058,
+      "votes": 10109
+    },
+    {
+      "bgg_id": 327778,
+      "rank": 1547,
+      "name": "ito",
+      "year": 2019,
+      "rating": 7.29024,
+      "votes": 2282
+    },
+    {
+      "bgg_id": 219100,
+      "rank": 1549,
+      "name": "UBOOT: The Board Game",
+      "year": 2019,
+      "rating": 7.55497,
+      "votes": 2195
+    },
+    {
+      "bgg_id": 322656,
+      "rank": 1550,
+      "name": "burncycle",
+      "year": 2022,
+      "rating": 7.90383,
+      "votes": 1440
+    },
+    {
+      "bgg_id": 411875,
+      "rank": 1551,
+      "name": "Pixies",
+      "year": 2024,
+      "rating": 7.09167,
+      "votes": 3079
+    },
+    {
+      "bgg_id": 300001,
+      "rank": 1552,
+      "name": "Renature",
+      "year": 2020,
+      "rating": 7.09434,
+      "votes": 2898
+    },
+    {
+      "bgg_id": 232988,
+      "rank": 1558,
+      "name": "The Castles of Burgundy: The Dice Game",
+      "year": 2017,
+      "rating": 6.86311,
+      "votes": 4288
+    },
+    {
+      "bgg_id": 223931,
+      "rank": 1559,
+      "name": "Sherlock Holmes Consulting Detective: Carlton House & Queen's Park",
+      "year": 2017,
+      "rating": 7.75561,
+      "votes": 1512
+    },
+    {
+      "bgg_id": 331050,
+      "rank": 1560,
+      "name": "Disney Villainous: Despicable Plots",
+      "year": 2021,
+      "rating": 7.47609,
+      "votes": 2109
+    },
+    {
+      "bgg_id": 257527,
+      "rank": 1561,
+      "name": "Trapwords",
+      "year": 2018,
+      "rating": 6.99334,
+      "votes": 3511
+    },
+    {
+      "bgg_id": 257769,
+      "rank": 1562,
+      "name": "Walking in Burano",
+      "year": 2018,
+      "rating": 7.08676,
+      "votes": 3004
+    },
+    {
+      "bgg_id": 23094,
+      "rank": 1564,
+      "name": "Planet Steam",
+      "year": 2008,
+      "rating": 7.08933,
+      "votes": 2956
+    },
+    {
+      "bgg_id": 38713,
+      "rank": 1567,
+      "name": "Time's Up! Edición Amarilla",
+      "year": 2008,
+      "rating": 7.55906,
+      "votes": 1722
+    },
+    {
+      "bgg_id": 328326,
+      "rank": 1569,
+      "name": "Fleet: The Dice Game (Second Edition)",
+      "year": 2020,
+      "rating": 7.76424,
+      "votes": 1437
+    },
+    {
+      "bgg_id": 204505,
+      "rank": 1570,
+      "name": "Museum",
+      "year": 2019,
+      "rating": 7.15523,
+      "votes": 2794
+    },
+    {
+      "bgg_id": 9203,
+      "rank": 1571,
+      "name": "Wings of War: Famous Aces",
+      "year": 2004,
+      "rating": 6.86129,
+      "votes": 4782
+    },
+    {
+      "bgg_id": 38863,
+      "rank": 1575,
+      "name": "The Rich and the Good",
+      "year": 2008,
+      "rating": 7.1507,
+      "votes": 2583
+    },
+    {
+      "bgg_id": 331224,
+      "rank": 1577,
+      "name": "Zombicide: Undead or Alive",
+      "year": 2022,
+      "rating": 7.99839,
+      "votes": 1448
+    },
+    {
+      "bgg_id": 163474,
+      "rank": 1578,
+      "name": "V-Sabotage",
+      "year": 2016,
+      "rating": 7.67041,
+      "votes": 1819
+    },
+    {
+      "bgg_id": 1897,
+      "rank": 1579,
+      "name": "The Starfarers of Catan",
+      "year": 1999,
+      "rating": 6.80145,
+      "votes": 5414
+    },
+    {
+      "bgg_id": 281946,
+      "rank": 1580,
+      "name": "Aftermath",
+      "year": 2019,
+      "rating": 7.48773,
+      "votes": 2037
+    },
+    {
+      "bgg_id": 244918,
+      "rank": 1581,
+      "name": "EXIT: The Game – The Mysterious Museum",
+      "year": 2018,
+      "rating": 7.09613,
+      "votes": 2779
+    },
+    {
+      "bgg_id": 206803,
+      "rank": 1583,
+      "name": "Warsaw: City of Ruins",
+      "year": 2016,
+      "rating": 7.2964,
+      "votes": 2167
+    },
+    {
+      "bgg_id": 2338,
+      "rank": 1585,
+      "name": "Starship Catan",
+      "year": 2001,
+      "rating": 6.83377,
+      "votes": 4531
+    },
+    {
+      "bgg_id": 217085,
+      "rank": 1586,
+      "name": "Unearth",
+      "year": 2017,
+      "rating": 6.82,
+      "votes": 5335
+    },
+    {
+      "bgg_id": 366683,
+      "rank": 1587,
+      "name": "Raising Robots",
+      "year": 2023,
+      "rating": 7.6986,
+      "votes": 1601
+    },
+    {
+      "bgg_id": 205418,
+      "rank": 1589,
+      "name": "Agricola: Family Edition",
+      "year": 2016,
+      "rating": 7.04353,
+      "votes": 3198
+    },
+    {
+      "bgg_id": 63975,
+      "rank": 1593,
+      "name": "Mountain Goats",
+      "year": 2010,
+      "rating": 6.81064,
+      "votes": 4753
+    },
+    {
+      "bgg_id": 315727,
+      "rank": 1595,
+      "name": "Last Light",
+      "year": 2023,
+      "rating": 7.37384,
+      "votes": 1995
+    },
+    {
+      "bgg_id": 98527,
+      "rank": 1596,
+      "name": "Gloom of Kilforth: A Fantasy Quest Game",
+      "year": 2017,
+      "rating": 7.50177,
+      "votes": 2086
+    },
+    {
+      "bgg_id": 215471,
+      "rank": 1598,
+      "name": "Photograph",
+      "year": 2016,
+      "rating": 7.39217,
+      "votes": 1922
+    },
+    {
+      "bgg_id": 12495,
+      "rank": 1599,
+      "name": "Fire & Axe: A Viking Saga",
+      "year": 2004,
+      "rating": 6.99078,
+      "votes": 3208
+    },
+    {
+      "bgg_id": 167270,
+      "rank": 1600,
+      "name": "Medina (Second Edition)",
+      "year": 2014,
+      "rating": 7.23587,
+      "votes": 2216
+    },
+    {
+      "bgg_id": 42487,
+      "rank": 1601,
+      "name": "Lost Cities: The Board Game",
+      "year": 2008,
+      "rating": 6.79993,
+      "votes": 4858
+    },
+    {
+      "bgg_id": 338376,
+      "rank": 1602,
+      "name": "A Gest of Robin Hood",
+      "year": 2024,
+      "rating": 7.74713,
+      "votes": 1474
+    },
+    {
+      "bgg_id": 386937,
+      "rank": 1603,
+      "name": "Lacuna",
+      "year": 2023,
+      "rating": 7.40429,
+      "votes": 1906
+    },
+    {
+      "bgg_id": 393429,
+      "rank": 1606,
+      "name": "Critter Kitchen",
+      "year": 2025,
+      "rating": 7.91512,
+      "votes": 1451
+    },
+    {
+      "bgg_id": 244191,
+      "rank": 1607,
+      "name": "Naga Raja",
+      "year": 2019,
+      "rating": 7.09848,
+      "votes": 2754
+    },
+    {
+      "bgg_id": 134453,
+      "rank": 1608,
+      "name": "The Little Prince: Make Me a Planet",
+      "year": 2013,
+      "rating": 6.88715,
+      "votes": 3925
+    },
+    {
+      "bgg_id": 103,
+      "rank": 1609,
+      "name": "Titan",
+      "year": 1980,
+      "rating": 6.9611,
+      "votes": 4064
+    },
+    {
+      "bgg_id": 304285,
+      "rank": 1611,
+      "name": "Infinity Gauntlet: A Love Letter Game",
+      "year": 2020,
+      "rating": 6.9301,
+      "votes": 3716
+    },
+    {
+      "bgg_id": 117985,
+      "rank": 1612,
+      "name": "Star Trek: Catan",
+      "year": 2012,
+      "rating": 6.97914,
+      "votes": 3787
+    },
+    {
+      "bgg_id": 127024,
+      "rank": 1613,
+      "name": "Room 25",
+      "year": 2013,
+      "rating": 6.6874,
+      "votes": 7117
+    },
+    {
+      "bgg_id": 248125,
+      "rank": 1614,
+      "name": "Monumental",
+      "year": 2020,
+      "rating": 7.4187,
+      "votes": 2113
+    },
+    {
+      "bgg_id": 57390,
+      "rank": 1617,
+      "name": "Catacombs",
+      "year": 2010,
+      "rating": 7.04895,
+      "votes": 2978
+    },
+    {
+      "bgg_id": 246663,
+      "rank": 1618,
+      "name": "NEOM",
+      "year": 2018,
+      "rating": 7.21192,
+      "votes": 2347
+    },
+    {
+      "bgg_id": 113401,
+      "rank": 1619,
+      "name": "Timeline: Events",
+      "year": 2011,
+      "rating": 6.76606,
+      "votes": 5179
+    },
+    {
+      "bgg_id": 624,
+      "rank": 1620,
+      "name": "Quoridor",
+      "year": 1997,
+      "rating": 6.64762,
+      "votes": 9229
+    },
+    {
+      "bgg_id": 15,
+      "rank": 1622,
+      "name": "Cosmic Encounter",
+      "year": 1977,
+      "rating": 6.9211,
+      "votes": 3983
+    },
+    {
+      "bgg_id": 215841,
+      "rank": 1623,
+      "name": "EXIT: The Game – The Forgotten Island",
+      "year": 2017,
+      "rating": 6.87357,
+      "votes": 3851
+    },
+    {
+      "bgg_id": 358981,
+      "rank": 1624,
+      "name": "Air, Land, & Sea: Spies, Lies, & Supplies",
+      "year": 2022,
+      "rating": 7.80387,
+      "votes": 1370
+    },
+    {
+      "bgg_id": 106,
+      "rank": 1625,
+      "name": "Mystery Rummy: Jack the Ripper",
+      "year": 1998,
+      "rating": 6.94191,
+      "votes": 3580
+    },
+    {
+      "bgg_id": 272453,
+      "rank": 1626,
+      "name": "KeyForge: Age of Ascension",
+      "year": 2019,
+      "rating": 7.17333,
+      "votes": 2651
+    },
+    {
+      "bgg_id": 412865,
+      "rank": 1627,
+      "name": "Foundations of Metropolis",
+      "year": 2024,
+      "rating": 7.68463,
+      "votes": 1461
+    },
+    {
+      "bgg_id": 60435,
+      "rank": 1628,
+      "name": "Rallyman",
+      "year": 2009,
+      "rating": 7.1767,
+      "votes": 2519
+    },
+    {
+      "bgg_id": 352695,
+      "rank": 1630,
+      "name": "Oranienburger Kanal",
+      "year": 2023,
+      "rating": 7.98287,
+      "votes": 1203
+    },
+    {
+      "bgg_id": 10640,
+      "rank": 1632,
+      "name": "Doom: The Boardgame",
+      "year": 2004,
+      "rating": 6.84393,
+      "votes": 5260
+    },
+    {
+      "bgg_id": 167513,
+      "rank": 1633,
+      "name": "Barony",
+      "year": 2015,
+      "rating": 7.07056,
+      "votes": 2928
+    },
+    {
+      "bgg_id": 180040,
+      "rank": 1636,
+      "name": "Villages of Valeria",
+      "year": 2017,
+      "rating": 6.97472,
+      "votes": 3254
+    },
+    {
+      "bgg_id": 33604,
+      "rank": 1637,
+      "name": "Say Anything",
+      "year": 2008,
+      "rating": 6.69763,
+      "votes": 6345
+    },
+    {
+      "bgg_id": 172385,
+      "rank": 1638,
+      "name": "Porta Nigra",
+      "year": 2015,
+      "rating": 7.16177,
+      "votes": 2406
+    },
+    {
+      "bgg_id": 166226,
+      "rank": 1639,
+      "name": "The Staufer Dynasty",
+      "year": 2014,
+      "rating": 7.14527,
+      "votes": 2449
+    },
+    {
+      "bgg_id": 21441,
+      "rank": 1640,
+      "name": "Mykerinos",
+      "year": 2006,
+      "rating": 6.83872,
+      "votes": 4003
+    },
+    {
+      "bgg_id": 233020,
+      "rank": 1641,
+      "name": "Fireball Island: The Curse of Vul-Kar",
+      "year": 2018,
+      "rating": 6.73545,
+      "votes": 6389
+    },
+    {
+      "bgg_id": 403754,
+      "rank": 1642,
+      "name": "Middle Ages",
+      "year": 2024,
+      "rating": 7.19274,
+      "votes": 2376
+    },
+    {
+      "bgg_id": 425428,
+      "rank": 1644,
+      "name": "Survive The Island",
+      "year": 2024,
+      "rating": 7.4121,
+      "votes": 2047
+    },
+    {
+      "bgg_id": 360153,
+      "rank": 1646,
+      "name": "Marvel Dice Throne: Scarlet Witch v. Thor v. Loki v. Spider-Man",
+      "year": 2022,
+      "rating": 7.70001,
+      "votes": 1504
+    },
+    {
+      "bgg_id": 212516,
+      "rank": 1647,
+      "name": "Keyper",
+      "year": 2017,
+      "rating": 7.21192,
+      "votes": 2213
+    },
+    {
+      "bgg_id": 146910,
+      "rank": 1648,
+      "name": "Wildcatters",
+      "year": 2013,
+      "rating": 7.60296,
+      "votes": 1530
+    },
+    {
+      "bgg_id": 72991,
+      "rank": 1649,
+      "name": "Asara",
+      "year": 2010,
+      "rating": 6.99721,
+      "votes": 3000
+    },
+    {
+      "bgg_id": 174837,
+      "rank": 1657,
+      "name": "Sol: Last Days of a Star",
+      "year": 2017,
+      "rating": 7.51657,
+      "votes": 1697
+    },
+    {
+      "bgg_id": 159109,
+      "rank": 1659,
+      "name": "XenoShyft: Onslaught",
+      "year": 2015,
+      "rating": 6.89249,
+      "votes": 3911
+    },
+    {
+      "bgg_id": 370164,
+      "rank": 1661,
+      "name": "Fun Facts",
+      "year": 2022,
+      "rating": 7.05147,
+      "votes": 2728
+    },
+    {
+      "bgg_id": 216201,
+      "rank": 1664,
+      "name": "Robo Rally",
+      "year": 2016,
+      "rating": 6.94863,
+      "votes": 3624
+    },
+    {
+      "bgg_id": 166857,
+      "rank": 1665,
+      "name": "Antike II",
+      "year": 2014,
+      "rating": 7.44696,
+      "votes": 1753
+    },
+    {
+      "bgg_id": 184424,
+      "rank": 1666,
+      "name": "Mega Civilization",
+      "year": 2015,
+      "rating": 8.16712,
+      "votes": 1121
+    },
+    {
+      "bgg_id": 165950,
+      "rank": 1671,
+      "name": "Beasty Bar",
+      "year": 2014,
+      "rating": 6.79785,
+      "votes": 4565
+    },
+    {
+      "bgg_id": 15126,
+      "rank": 1672,
+      "name": "Advanced Squad Leader: Starter Kit #2",
+      "year": 2005,
+      "rating": 7.96643,
+      "votes": 1312
+    },
+    {
+      "bgg_id": 347013,
+      "rank": 1673,
+      "name": "Get on Board: New York & London",
+      "year": 2022,
+      "rating": 6.95002,
+      "votes": 3220
+    },
+    {
+      "bgg_id": 19237,
+      "rank": 1674,
+      "name": "Ca$h 'n Gun$",
+      "year": 2005,
+      "rating": 6.54844,
+      "votes": 10367
+    },
+    {
+      "bgg_id": 66,
+      "rank": 1675,
+      "name": "Löwenherz",
+      "year": 1997,
+      "rating": 7.05482,
+      "votes": 2710
+    },
+    {
+      "bgg_id": 215842,
+      "rank": 1676,
+      "name": "EXIT: The Game – The Polar Station",
+      "year": 2017,
+      "rating": 6.83586,
+      "votes": 3866
+    },
+    {
+      "bgg_id": 216091,
+      "rank": 1678,
+      "name": "Unlock!: Escape Adventures – The Formula",
+      "year": 2017,
+      "rating": 6.98259,
+      "votes": 2914
+    },
+    {
+      "bgg_id": 2122,
+      "rank": 1679,
+      "name": "Vampire: The Eternal Struggle",
+      "year": 1994,
+      "rating": 7.2644,
+      "votes": 2484
+    },
+    {
+      "bgg_id": 179572,
+      "rank": 1681,
+      "name": "Dice City",
+      "year": 2015,
+      "rating": 6.71529,
+      "votes": 5397
+    },
+    {
+      "bgg_id": 336929,
+      "rank": 1683,
+      "name": "Land vs Sea",
+      "year": 2021,
+      "rating": 7.08564,
+      "votes": 2668
+    },
+    {
+      "bgg_id": 19999,
+      "rank": 1684,
+      "name": "Aton",
+      "year": 2005,
+      "rating": 6.85876,
+      "votes": 3626
+    },
+    {
+      "bgg_id": 348096,
+      "rank": 1685,
+      "name": "Kites",
+      "year": 2022,
+      "rating": 6.89006,
+      "votes": 3606
+    },
+    {
+      "bgg_id": 55829,
+      "rank": 1686,
+      "name": "Axis & Allies: Pacific 1940",
+      "year": 2009,
+      "rating": 7.52463,
+      "votes": 2082
+    },
+    {
+      "bgg_id": 391795,
+      "rank": 1687,
+      "name": "Kinfire Delve: Vainglory's Grotto",
+      "year": 2023,
+      "rating": 7.89374,
+      "votes": 1357
+    },
+    {
+      "bgg_id": 264647,
+      "rank": 1688,
+      "name": "Age of Civilization",
+      "year": 2019,
+      "rating": 7.03041,
+      "votes": 2986
+    },
+    {
+      "bgg_id": 338460,
+      "rank": 1689,
+      "name": "The Isle of Cats: Explore & Draw",
+      "year": 2022,
+      "rating": 7.37197,
+      "votes": 1864
+    },
+    {
+      "bgg_id": 3284,
+      "rank": 1690,
+      "name": "Star Wars: Epic Duels",
+      "year": 2002,
+      "rating": 7.02528,
+      "votes": 3397
+    },
+    {
+      "bgg_id": 139030,
+      "rank": 1693,
+      "name": "Mascarade",
+      "year": 2013,
+      "rating": 6.55422,
+      "votes": 11094
+    },
+    {
+      "bgg_id": 283317,
+      "rank": 1694,
+      "name": "The 7th Continent: Classic Edition",
+      "year": 2019,
+      "rating": 7.46652,
+      "votes": 1770
+    },
+    {
+      "bgg_id": 255675,
+      "rank": 1695,
+      "name": "EXIT: The Game – The Catacombs of Horror",
+      "year": 2018,
+      "rating": 7.29771,
+      "votes": 1983
+    },
+    {
+      "bgg_id": 371972,
+      "rank": 1699,
+      "name": "Ierusalem: Anno Domini",
+      "year": 2023,
+      "rating": 7.53985,
+      "votes": 1843
+    },
+    {
+      "bgg_id": 29223,
+      "rank": 1701,
+      "name": "Marrakech",
+      "year": 2007,
+      "rating": 6.70315,
+      "votes": 5782
+    },
+    {
+      "bgg_id": 355326,
+      "rank": 1702,
+      "name": "Heroes of Might and Magic III: The Board Game",
+      "year": 2024,
+      "rating": 7.85519,
+      "votes": 2163
+    },
+    {
+      "bgg_id": 191894,
+      "rank": 1704,
+      "name": "Imagine",
+      "year": 2015,
+      "rating": 6.81577,
+      "votes": 4509
+    },
+    {
+      "bgg_id": 142992,
+      "rank": 1705,
+      "name": "Gravwell: Escape from the 9th Dimension",
+      "year": 2013,
+      "rating": 6.85438,
+      "votes": 3740
+    },
+    {
+      "bgg_id": 179460,
+      "rank": 1706,
+      "name": "Stronghold: 2nd edition",
+      "year": 2015,
+      "rating": 7.43492,
+      "votes": 1774
+    },
+    {
+      "bgg_id": 94362,
+      "rank": 1708,
+      "name": "Rune Age",
+      "year": 2011,
+      "rating": 6.79947,
+      "votes": 4544
+    },
+    {
+      "bgg_id": 196202,
+      "rank": 1711,
+      "name": "Rum & Bones: Second Tide",
+      "year": 2017,
+      "rating": 7.58239,
+      "votes": 1620
+    },
+    {
+      "bgg_id": 330950,
+      "rank": 1712,
+      "name": "Age of Galaxy",
+      "year": 2022,
+      "rating": 7.62074,
+      "votes": 1523
+    },
+    {
+      "bgg_id": 282853,
+      "rank": 1713,
+      "name": "CATAN: Starfarers",
+      "year": 2019,
+      "rating": 7.53638,
+      "votes": 1708
+    },
+    {
+      "bgg_id": 1568,
+      "rank": 1714,
+      "name": "Space Crusade",
+      "year": 1990,
+      "rating": 7.07789,
+      "votes": 3144
+    },
+    {
+      "bgg_id": 71836,
+      "rank": 1716,
+      "name": "Onirim",
+      "year": 2010,
+      "rating": 6.63038,
+      "votes": 6698
+    },
+    {
+      "bgg_id": 325698,
+      "rank": 1718,
+      "name": "Juicy Fruits",
+      "year": 2021,
+      "rating": 7.01717,
+      "votes": 2746
+    },
+    {
+      "bgg_id": 422780,
+      "rank": 1720,
+      "name": "Mistborn: The Deckbuilding Game",
+      "year": 2024,
+      "rating": 7.77993,
+      "votes": 1511
+    },
+    {
+      "bgg_id": 63170,
+      "rank": 1721,
+      "name": "1817",
+      "year": 2010,
+      "rating": 8.58048,
+      "votes": 831
+    },
+    {
+      "bgg_id": 2065,
+      "rank": 1723,
+      "name": "Shogi",
+      "year": 1587,
+      "rating": 7.39874,
+      "votes": 2007
+    },
+    {
+      "bgg_id": 3955,
+      "rank": 1724,
+      "name": "BANG!",
+      "year": 2002,
+      "rating": 6.4877,
+      "votes": 33614
+    },
+    {
+      "bgg_id": 306709,
+      "rank": 1726,
+      "name": "The Night Cage",
+      "year": 2021,
+      "rating": 7.11214,
+      "votes": 2907
+    },
+    {
+      "bgg_id": 176229,
+      "rank": 1727,
+      "name": "Tides of Time",
+      "year": 2015,
+      "rating": 6.57992,
+      "votes": 7623
+    },
+    {
+      "bgg_id": 218530,
+      "rank": 1728,
+      "name": "Tortuga 1667",
+      "year": 2017,
+      "rating": 6.89091,
+      "votes": 3979
+    },
+    {
+      "bgg_id": 382518,
+      "rank": 1736,
+      "name": "Sankoré: The Pride of Mansa Musa",
+      "year": 2024,
+      "rating": 7.97543,
+      "votes": 1192
+    },
+    {
+      "bgg_id": 811,
+      "rank": 1737,
+      "name": "Rummikub",
+      "year": 1977,
+      "rating": 6.50383,
+      "votes": 20565
+    },
+    {
+      "bgg_id": 175549,
+      "rank": 1743,
+      "name": "Salem 1692",
+      "year": 2015,
+      "rating": 7.10994,
+      "votes": 2984
+    },
+    {
+      "bgg_id": 294693,
+      "rank": 1744,
+      "name": "Nokosu Dice",
+      "year": 2016,
+      "rating": 7.59218,
+      "votes": 1422
+    },
+    {
+      "bgg_id": 176083,
+      "rank": 1746,
+      "name": "Hit Z Road",
+      "year": 2016,
+      "rating": 6.76179,
+      "votes": 4665
+    },
+    {
+      "bgg_id": 181810,
+      "rank": 1747,
+      "name": "Kodama: The Tree Spirits",
+      "year": 2016,
+      "rating": 6.66187,
+      "votes": 6092
+    },
+    {
+      "bgg_id": 331401,
+      "rank": 1748,
+      "name": "Dog Park",
+      "year": 2022,
+      "rating": 6.90946,
+      "votes": 3634
+    },
+    {
+      "bgg_id": 318546,
+      "rank": 1750,
+      "name": "CoraQuest",
+      "year": 2021,
+      "rating": 7.83702,
+      "votes": 1443
+    },
+    {
+      "bgg_id": 282414,
+      "rank": 1751,
+      "name": "Pharaon",
+      "year": 2019,
+      "rating": 7.38017,
+      "votes": 1799
+    },
+    {
+      "bgg_id": 371932,
+      "rank": 1752,
+      "name": "Explorers of Navoria",
+      "year": 2024,
+      "rating": 7.55531,
+      "votes": 1582
+    },
+    {
+      "bgg_id": 407343,
+      "rank": 1754,
+      "name": "Ironwood",
+      "year": 2024,
+      "rating": 7.9511,
+      "votes": 1238
+    },
+    {
+      "bgg_id": 129051,
+      "rank": 1755,
+      "name": "Le Havre: The Inland Port",
+      "year": 2012,
+      "rating": 6.7969,
+      "votes": 3731
+    },
+    {
+      "bgg_id": 328124,
+      "rank": 1756,
+      "name": "Bot Factory",
+      "year": 2023,
+      "rating": 7.39357,
+      "votes": 1807
+    },
+    {
+      "bgg_id": 175223,
+      "rank": 1759,
+      "name": "Valley of the Kings: Afterlife",
+      "year": 2015,
+      "rating": 7.22616,
+      "votes": 2024
+    },
+    {
+      "bgg_id": 301716,
+      "rank": 1761,
+      "name": "Glasgow",
+      "year": 2020,
+      "rating": 7.11827,
+      "votes": 2315
+    },
+    {
+      "bgg_id": 406291,
+      "rank": 1764,
+      "name": "스플렌더: Pokémon (Splendor: Pokémon)",
+      "year": 2023,
+      "rating": 7.92925,
+      "votes": 1203
+    },
+    {
+      "bgg_id": 205317,
+      "rank": 1765,
+      "name": "DOOM: The Board Game",
+      "year": 2016,
+      "rating": 7.37221,
+      "votes": 2221
+    },
+    {
+      "bgg_id": 143175,
+      "rank": 1767,
+      "name": "Kashgar: Merchants of the Silk Road",
+      "year": 2013,
+      "rating": 7.07102,
+      "votes": 2380
+    },
+    {
+      "bgg_id": 22,
+      "rank": 1768,
+      "name": "Magic Realm",
+      "year": 1979,
+      "rating": 7.30311,
+      "votes": 2192
+    },
+    {
+      "bgg_id": 119,
+      "rank": 1770,
+      "name": "Cosmolancer",
+      "year": 1994,
+      "rating": 6.67726,
+      "votes": 5120
+    },
+    {
+      "bgg_id": 356414,
+      "rank": 1771,
+      "name": "Space Station Phoenix",
+      "year": 2022,
+      "rating": 7.37343,
+      "votes": 1731
+    },
+    {
+      "bgg_id": 223740,
+      "rank": 1772,
+      "name": "Bargain Quest",
+      "year": 2017,
+      "rating": 6.81587,
+      "votes": 4085
+    },
+    {
+      "bgg_id": 351476,
+      "rank": 1774,
+      "name": "My City: Roll & Build",
+      "year": 2022,
+      "rating": 7.06112,
+      "votes": 2484
+    },
+    {
+      "bgg_id": 271321,
+      "rank": 1777,
+      "name": "CABO (Second Edition)",
+      "year": 2019,
+      "rating": 7.30416,
+      "votes": 1983
+    },
+    {
+      "bgg_id": 21550,
+      "rank": 1780,
+      "name": "Blokus Trigon",
+      "year": 2006,
+      "rating": 6.88931,
+      "votes": 3319
+    },
+    {
+      "bgg_id": 138431,
+      "rank": 1781,
+      "name": "Galaxy Defenders",
+      "year": 2014,
+      "rating": 7.4132,
+      "votes": 1807
+    },
+    {
+      "bgg_id": 252929,
+      "rank": 1782,
+      "name": "Planet",
+      "year": 2018,
+      "rating": 6.64616,
+      "votes": 5961
+    },
+    {
+      "bgg_id": 1915,
+      "rank": 1784,
+      "name": "Middle-earth",
+      "year": 1995,
+      "rating": 7.36177,
+      "votes": 2039
+    },
+    {
+      "bgg_id": 101785,
+      "rank": 1786,
+      "name": "D-Day Dice",
+      "year": 2012,
+      "rating": 6.8145,
+      "votes": 3674
+    },
+    {
+      "bgg_id": 358737,
+      "rank": 1789,
+      "name": "Leviathan Wilds",
+      "year": 2024,
+      "rating": 7.90768,
+      "votes": 1187
+    },
+    {
+      "bgg_id": 18745,
+      "rank": 1790,
+      "name": "Sun Tzu",
+      "year": 2005,
+      "rating": 7.04272,
+      "votes": 2486
+    },
+    {
+      "bgg_id": 312251,
+      "rank": 1791,
+      "name": "Curious Cargo",
+      "year": 2020,
+      "rating": 7.01718,
+      "votes": 2595
+    },
+    {
+      "bgg_id": 260300,
+      "rank": 1794,
+      "name": "Dungeon Mayhem",
+      "year": 2018,
+      "rating": 6.87414,
+      "votes": 4311
+    },
+    {
+      "bgg_id": 356754,
+      "rank": 1795,
+      "name": "Tamashii: Chronicle of Ascend",
+      "year": 2023,
+      "rating": 8.0947,
+      "votes": 1178
+    },
+    {
+      "bgg_id": 24827,
+      "rank": 1796,
+      "name": "Traders of Osaka",
+      "year": 2006,
+      "rating": 6.8031,
+      "votes": 3572
+    },
+    {
+      "bgg_id": 422674,
+      "rank": 1797,
+      "name": "Saltfjord",
+      "year": 2024,
+      "rating": 7.87968,
+      "votes": 1150
+    },
+    {
+      "bgg_id": 337787,
+      "rank": 1798,
+      "name": "Summer Camp",
+      "year": 2021,
+      "rating": 7.11133,
+      "votes": 2338
+    },
+    {
+      "bgg_id": 364186,
+      "rank": 1799,
+      "name": "Terra Nova",
+      "year": 2022,
+      "rating": 7.14113,
+      "votes": 2259
+    },
+    {
+      "bgg_id": 17223,
+      "rank": 1801,
+      "name": "World of Warcraft: The Boardgame",
+      "year": 2005,
+      "rating": 6.73907,
+      "votes": 5961
+    },
+    {
+      "bgg_id": 75165,
+      "rank": 1803,
+      "name": "De Vulgari Eloquentia",
+      "year": 2010,
+      "rating": 7.1909,
+      "votes": 2035
+    },
+    {
+      "bgg_id": 180020,
+      "rank": 1804,
+      "name": "Virus!",
+      "year": 2015,
+      "rating": 6.72036,
+      "votes": 7392
+    },
+    {
+      "bgg_id": 297486,
+      "rank": 1805,
+      "name": "Ride the Rails",
+      "year": 2020,
+      "rating": 7.13487,
+      "votes": 2119
+    },
+    {
+      "bgg_id": 24417,
+      "rank": 1806,
+      "name": "Factory Fun",
+      "year": 2006,
+      "rating": 6.79513,
+      "votes": 3517
+    },
+    {
+      "bgg_id": 120523,
+      "rank": 1807,
+      "name": "Nothing Personal",
+      "year": 2013,
+      "rating": 7.02672,
+      "votes": 2445
+    },
+    {
+      "bgg_id": 619,
+      "rank": 1809,
+      "name": "The Bottle Imp",
+      "year": 1995,
+      "rating": 6.73021,
+      "votes": 4105
+    },
+    {
+      "bgg_id": 233678,
+      "rank": 1811,
+      "name": "Indian Summer",
+      "year": 2017,
+      "rating": 6.75764,
+      "votes": 4159
+    },
+    {
+      "bgg_id": 1198,
+      "rank": 1812,
+      "name": "SET",
+      "year": 1988,
+      "rating": 6.50573,
+      "votes": 13724
+    },
+    {
+      "bgg_id": 405537,
+      "rank": 1815,
+      "name": "DroPolter",
+      "year": 2023,
+      "rating": 7.12166,
+      "votes": 2193
+    },
+    {
+      "bgg_id": 390340,
+      "rank": 1816,
+      "name": "Challengers! Beach Cup",
+      "year": 2023,
+      "rating": 7.81746,
+      "votes": 1221
+    },
+    {
+      "bgg_id": 393307,
+      "rank": 1818,
+      "name": "Tower Up",
+      "year": 2024,
+      "rating": 7.37637,
+      "votes": 1667
+    },
+    {
+      "bgg_id": 332321,
+      "rank": 1819,
+      "name": "ALIEN: Fate of the Nostromo",
+      "year": 2021,
+      "rating": 7.05904,
+      "votes": 2936
+    },
+    {
+      "bgg_id": 166571,
+      "rank": 1821,
+      "name": "Tramways",
+      "year": 2016,
+      "rating": 7.36017,
+      "votes": 1638
+    },
+    {
+      "bgg_id": 275044,
+      "rank": 1822,
+      "name": "Glow",
+      "year": 2021,
+      "rating": 6.96272,
+      "votes": 3031
+    },
+    {
+      "bgg_id": 67877,
+      "rank": 1823,
+      "name": "Anomia",
+      "year": 2010,
+      "rating": 6.69253,
+      "votes": 5520
+    },
+    {
+      "bgg_id": 109125,
+      "rank": 1825,
+      "name": "Wallenstein (Second Edition)",
+      "year": 2012,
+      "rating": 7.57363,
+      "votes": 1395
+    },
+    {
+      "bgg_id": 1829,
+      "rank": 1826,
+      "name": "Risk 2210 A.D.",
+      "year": 2001,
+      "rating": 6.68736,
+      "votes": 7308
+    },
+    {
+      "bgg_id": 115,
+      "rank": 1827,
+      "name": "I'm the Boss!",
+      "year": 1994,
+      "rating": 6.77001,
+      "votes": 4040
+    },
+    {
+      "bgg_id": 240567,
+      "rank": 1828,
+      "name": "Chocolate Factory",
+      "year": 2019,
+      "rating": 7.04946,
+      "votes": 2360
+    },
+    {
+      "bgg_id": 235555,
+      "rank": 1830,
+      "name": "Bios: Origins (Second Edition)",
+      "year": 2019,
+      "rating": 7.75548,
+      "votes": 1275
+    },
+    {
+      "bgg_id": 195544,
+      "rank": 1831,
+      "name": "Tides of Madness",
+      "year": 2016,
+      "rating": 6.72695,
+      "votes": 4243
+    },
+    {
+      "bgg_id": 266967,
+      "rank": 1832,
+      "name": "Dice Throne: Season Two – Cursed Pirate v. Artificer",
+      "year": 2018,
+      "rating": 7.834,
+      "votes": 1224
+    },
+    {
+      "bgg_id": 270109,
+      "rank": 1834,
+      "name": "Iwari",
+      "year": 2020,
+      "rating": 7.06864,
+      "votes": 2330
+    },
+    {
+      "bgg_id": 22877,
+      "rank": 1835,
+      "name": "Fields of Fire",
+      "year": 2008,
+      "rating": 7.86108,
+      "votes": 1310
+    },
+    {
+      "bgg_id": 181524,
+      "rank": 1836,
+      "name": "Masmorra: Dungeons of Arcadia",
+      "year": 2017,
+      "rating": 7.03008,
+      "votes": 2924
+    },
+    {
+      "bgg_id": 168,
+      "rank": 1839,
+      "name": "Empire Builder",
+      "year": 1982,
+      "rating": 6.96092,
+      "votes": 3064
+    },
+    {
+      "bgg_id": 20542,
+      "rank": 1842,
+      "name": "Advanced Squad Leader: Starter Kit #3",
+      "year": 2007,
+      "rating": 8.04548,
+      "votes": 1146
+    },
+    {
+      "bgg_id": 3072,
+      "rank": 1845,
+      "name": "Necromunda",
+      "year": 1995,
+      "rating": 7.31248,
+      "votes": 1927
+    },
+    {
+      "bgg_id": 2987,
+      "rank": 1847,
+      "name": "Pirate's Cove",
+      "year": 2002,
+      "rating": 6.55536,
+      "votes": 8398
+    },
+    {
+      "bgg_id": 275913,
+      "rank": 1850,
+      "name": "Bruxelles 1897",
+      "year": 2019,
+      "rating": 7.14333,
+      "votes": 2172
+    },
+    {
+      "bgg_id": 289081,
+      "rank": 1852,
+      "name": "The Grand Carnival",
+      "year": 2020,
+      "rating": 7.5185,
+      "votes": 1411
+    },
+    {
+      "bgg_id": 195856,
+      "rank": 1853,
+      "name": "Bloodborne: The Card Game",
+      "year": 2016,
+      "rating": 6.85382,
+      "votes": 4094
+    },
+    {
+      "bgg_id": 381819,
+      "rank": 1854,
+      "name": "Zhanguo: The First Empire",
+      "year": 2023,
+      "rating": 7.97479,
+      "votes": 1072
+    },
+    {
+      "bgg_id": 38718,
+      "rank": 1856,
+      "name": "Normandy '44",
+      "year": 2010,
+      "rating": 7.90341,
+      "votes": 1196
+    },
+    {
+      "bgg_id": 494,
+      "rank": 1858,
+      "name": "Ave Caesar",
+      "year": 1989,
+      "rating": 6.65331,
+      "votes": 4973
+    },
+    {
+      "bgg_id": 398,
+      "rank": 1860,
+      "name": "Botswana",
+      "year": 1994,
+      "rating": 6.76843,
+      "votes": 3613
+    },
+    {
+      "bgg_id": 98,
+      "rank": 1861,
+      "name": "Axis & Allies",
+      "year": 1981,
+      "rating": 6.58112,
+      "votes": 11292
+    },
+    {
+      "bgg_id": 215840,
+      "rank": 1862,
+      "name": "EXIT: The Game – The Forbidden Castle",
+      "year": 2017,
+      "rating": 6.77913,
+      "votes": 3468
+    },
+    {
+      "bgg_id": 73664,
+      "rank": 1863,
+      "name": "Cabo",
+      "year": 2010,
+      "rating": 7.08673,
+      "votes": 2353
+    },
+    {
+      "bgg_id": 385680,
+      "rank": 1865,
+      "name": "Path of Civilization",
+      "year": 2023,
+      "rating": 7.2345,
+      "votes": 1962
+    },
+    {
+      "bgg_id": 314745,
+      "rank": 1866,
+      "name": "Now or Never",
+      "year": 2022,
+      "rating": 7.67222,
+      "votes": 1298
+    },
+    {
+      "bgg_id": 323255,
+      "rank": 1867,
+      "name": "Box One",
+      "year": 2020,
+      "rating": 7.72368,
+      "votes": 1285
+    },
+    {
+      "bgg_id": 230889,
+      "rank": 1868,
+      "name": "Aristeia!",
+      "year": 2017,
+      "rating": 8.13624,
+      "votes": 1168
+    },
+    {
+      "bgg_id": 295905,
+      "rank": 1870,
+      "name": "Cosmic Frog",
+      "year": 2020,
+      "rating": 7.23663,
+      "votes": 1932
+    },
+    {
+      "bgg_id": 424219,
+      "rank": 1872,
+      "name": "Zenith",
+      "year": 2025,
+      "rating": 7.92102,
+      "votes": 1205
+    },
+    {
+      "bgg_id": 244513,
+      "rank": 1873,
+      "name": "ICECOOL2",
+      "year": 2018,
+      "rating": 7.16238,
+      "votes": 1993
+    },
+    {
+      "bgg_id": 148951,
+      "rank": 1874,
+      "name": "Tiny Epic Kingdoms",
+      "year": 2014,
+      "rating": 6.54035,
+      "votes": 7890
+    },
+    {
+      "bgg_id": 339214,
+      "rank": 1875,
+      "name": "Fruit Fight",
+      "year": 2021,
+      "rating": 7.12545,
+      "votes": 2206
+    },
+    {
+      "bgg_id": 14254,
+      "rank": 1877,
+      "name": "PitchCar Mini",
+      "year": 2003,
+      "rating": 6.992,
+      "votes": 2401
+    },
+    {
+      "bgg_id": 183231,
+      "rank": 1878,
+      "name": "Adventure Land",
+      "year": 2015,
+      "rating": 6.8944,
+      "votes": 2852
+    },
+    {
+      "bgg_id": 422541,
+      "rank": 1879,
+      "name": "Star Trek: Captain's Chair",
+      "year": 2025,
+      "rating": 8.66514,
+      "votes": 839
+    },
+    {
+      "bgg_id": 260789,
+      "rank": 1882,
+      "name": "Assassin's Creed: Brotherhood of Venice",
+      "year": 2021,
+      "rating": 8.16055,
+      "votes": 1290
+    },
+    {
+      "bgg_id": 13780,
+      "rank": 1883,
+      "name": "In the Shadow of the Emperor",
+      "year": 2004,
+      "rating": 6.86084,
+      "votes": 2969
+    },
+    {
+      "bgg_id": 266083,
+      "rank": 1884,
+      "name": "L.L.A.M.A.",
+      "year": 2019,
+      "rating": 6.49525,
+      "votes": 9581
+    },
+    {
+      "bgg_id": 230267,
+      "rank": 1886,
+      "name": "Dice Settlers",
+      "year": 2018,
+      "rating": 6.87806,
+      "votes": 2984
+    },
+    {
+      "bgg_id": 148203,
+      "rank": 1887,
+      "name": "Dutch Blitz",
+      "year": 1960,
+      "rating": 6.78135,
+      "votes": 4605
+    },
+    {
+      "bgg_id": 38545,
+      "rank": 1890,
+      "name": "Kamisado",
+      "year": 2008,
+      "rating": 6.95471,
+      "votes": 2688
+    },
+    {
+      "bgg_id": 192860,
+      "rank": 1892,
+      "name": "Oceanos",
+      "year": 2016,
+      "rating": 6.78331,
+      "votes": 3514
+    },
+    {
+      "bgg_id": 171662,
+      "rank": 1894,
+      "name": "Neanderthal",
+      "year": 2015,
+      "rating": 7.25167,
+      "votes": 1866
+    },
+    {
+      "bgg_id": 43022,
+      "rank": 1895,
+      "name": "Yomi",
+      "year": 2011,
+      "rating": 6.91956,
+      "votes": 2995
+    },
+    {
+      "bgg_id": 295577,
+      "rank": 1897,
+      "name": "Dungeon Mayhem: Monster Madness",
+      "year": 2020,
+      "rating": 7.44426,
+      "votes": 1767
+    },
+    {
+      "bgg_id": 352179,
+      "rank": 1899,
+      "name": "Astro Knights",
+      "year": 2023,
+      "rating": 7.79838,
+      "votes": 1177
+    },
+    {
+      "bgg_id": 329226,
+      "rank": 1900,
+      "name": "Circadians: Chaos Order",
+      "year": 2022,
+      "rating": 7.93781,
+      "votes": 1107
+    },
+    {
+      "bgg_id": 31497,
+      "rank": 1904,
+      "name": "Oregon",
+      "year": 2007,
+      "rating": 6.77109,
+      "votes": 3514
+    },
+    {
+      "bgg_id": 302260,
+      "rank": 1906,
+      "name": "Abandon All Artichokes",
+      "year": 2020,
+      "rating": 6.58337,
+      "votes": 5950
+    },
+    {
+      "bgg_id": 183284,
+      "rank": 1908,
+      "name": "Factory Funner",
+      "year": 2016,
+      "rating": 7.14854,
+      "votes": 1914
+    },
+    {
+      "bgg_id": 146816,
+      "rank": 1909,
+      "name": "Sanssouci",
+      "year": 2013,
+      "rating": 7.1028,
+      "votes": 2153
+    },
+    {
+      "bgg_id": 204135,
+      "rank": 1910,
+      "name": "Skyjo",
+      "year": 2015,
+      "rating": 6.67052,
+      "votes": 5462
+    },
+    {
+      "bgg_id": 144041,
+      "rank": 1916,
+      "name": "Patchistory",
+      "year": 2013,
+      "rating": 7.05526,
+      "votes": 2212
+    },
+    {
+      "bgg_id": 388367,
+      "rank": 1919,
+      "name": "Innovation Ultimate",
+      "year": 2025,
+      "rating": 8.56785,
+      "votes": 750
+    },
+    {
+      "bgg_id": 277927,
+      "rank": 1920,
+      "name": "Bites",
+      "year": 2020,
+      "rating": 7.09321,
+      "votes": 2075
+    },
+    {
+      "bgg_id": 156714,
+      "rank": 1925,
+      "name": "Doomtown: Reloaded",
+      "year": 2014,
+      "rating": 7.1036,
+      "votes": 2368
+    },
+    {
+      "bgg_id": 218804,
+      "rank": 1926,
+      "name": "Imaginarium",
+      "year": 2018,
+      "rating": 7.12338,
+      "votes": 2159
+    },
+    {
+      "bgg_id": 99975,
+      "rank": 1927,
+      "name": "Timeline: Science & Discoveries",
+      "year": 2011,
+      "rating": 6.7098,
+      "votes": 4075
+    },
+    {
+      "bgg_id": 340364,
+      "rank": 1930,
+      "name": "Machi Koro 2",
+      "year": 2021,
+      "rating": 7.10541,
+      "votes": 2227
+    },
+    {
+      "bgg_id": 102435,
+      "rank": 1931,
+      "name": "Navajo Wars",
+      "year": 2013,
+      "rating": 7.91228,
+      "votes": 1094
+    },
+    {
+      "bgg_id": 269752,
+      "rank": 1933,
+      "name": "Noctiluca",
+      "year": 2019,
+      "rating": 7.09693,
+      "votes": 2108
+    },
+    {
+      "bgg_id": 84732,
+      "rank": 1935,
+      "name": "Kariba",
+      "year": 2010,
+      "rating": 7.02277,
+      "votes": 2365
+    },
+    {
+      "bgg_id": 235014,
+      "rank": 1936,
+      "name": "Sorcerer City",
+      "year": 2020,
+      "rating": 7.36613,
+      "votes": 1620
+    },
+    {
+      "bgg_id": 34194,
+      "rank": 1937,
+      "name": "Aquaretto",
+      "year": 2008,
+      "rating": 6.97226,
+      "votes": 2551
+    },
+    {
+      "bgg_id": 320390,
+      "rank": 1938,
+      "name": "Kabuto Sumo",
+      "year": 2021,
+      "rating": 6.73522,
+      "votes": 3821
+    },
+    {
+      "bgg_id": 259298,
+      "rank": 1939,
+      "name": "The Ancient World (Second Edition)",
+      "year": 2019,
+      "rating": 7.49889,
+      "votes": 1391
+    },
+    {
+      "bgg_id": 386166,
+      "rank": 1941,
+      "name": "Santorini: Pantheon Edition",
+      "year": 2025,
+      "rating": 8.60439,
+      "votes": 769
+    },
+    {
+      "bgg_id": 361788,
+      "rank": 1943,
+      "name": "First in Flight",
+      "year": 2023,
+      "rating": 7.48271,
+      "votes": 1402
+    },
+    {
+      "bgg_id": 5206,
+      "rank": 1944,
+      "name": "Ogre",
+      "year": 1977,
+      "rating": 6.94565,
+      "votes": 2919
+    },
+    {
+      "bgg_id": 285905,
+      "rank": 1949,
+      "name": "Marvel: Crisis Protocol Core Set",
+      "year": 2019,
+      "rating": 8.2323,
+      "votes": 1068
+    },
+    {
+      "bgg_id": 245354,
+      "rank": 1950,
+      "name": "Unlock!: Secret Adventures – The Adventurers of Oz",
+      "year": 2018,
+      "rating": 7.33534,
+      "votes": 1542
+    },
+    {
+      "bgg_id": 131111,
+      "rank": 1951,
+      "name": "Codex: Card-Time Strategy – Deluxe Set",
+      "year": 2016,
+      "rating": 7.99314,
+      "votes": 1151
+    },
+    {
+      "bgg_id": 40270,
+      "rank": 1952,
+      "name": "Call of Cthulhu: The Card Game",
+      "year": 2008,
+      "rating": 6.88982,
+      "votes": 3046
+    },
+    {
+      "bgg_id": 26,
+      "rank": 1953,
+      "name": "Age of Renaissance",
+      "year": 1996,
+      "rating": 7.09424,
+      "votes": 2245
+    },
+    {
+      "bgg_id": 362020,
+      "rank": 1954,
+      "name": "Cosmoctopus",
+      "year": 2023,
+      "rating": 7.18414,
+      "votes": 2026
+    },
+    {
+      "bgg_id": 122294,
+      "rank": 1955,
+      "name": "Ascension: Immortal Heroes",
+      "year": 2012,
+      "rating": 7.3135,
+      "votes": 1693
+    },
+    {
+      "bgg_id": 422332,
+      "rank": 1959,
+      "name": "Star Wars: The Deckbuilding Game – Clone Wars Edition",
+      "year": 2024,
+      "rating": 8.03893,
+      "votes": 1029
+    },
+    {
+      "bgg_id": 12761,
+      "rank": 1963,
+      "name": "Ys",
+      "year": 2004,
+      "rating": 6.89735,
+      "votes": 2636
+    },
+    {
+      "bgg_id": 361,
+      "rank": 1964,
+      "name": "Hare & Tortoise",
+      "year": 1973,
+      "rating": 6.62421,
+      "votes": 4916
+    },
+    {
+      "bgg_id": 269968,
+      "rank": 1965,
+      "name": "EXIT: The Game – The Haunted Roller Coaster",
+      "year": 2019,
+      "rating": 7.11173,
+      "votes": 2003
+    },
+    {
+      "bgg_id": 206940,
+      "rank": 1966,
+      "name": "Carcassonne: Amazonas",
+      "year": 2016,
+      "rating": 7.02468,
+      "votes": 2259
+    },
+    {
+      "bgg_id": 46396,
+      "rank": 1967,
+      "name": "Ubongo 3D",
+      "year": 2009,
+      "rating": 7.06989,
+      "votes": 2116
+    },
+    {
+      "bgg_id": 274841,
+      "rank": 1968,
+      "name": "Cóatl",
+      "year": 2020,
+      "rating": 6.88306,
+      "votes": 3102
+    },
+    {
+      "bgg_id": 157917,
+      "rank": 1969,
+      "name": "The Lord of the Ice Garden",
+      "year": 2014,
+      "rating": 7.62952,
+      "votes": 1354
+    },
+    {
+      "bgg_id": 303551,
+      "rank": 1971,
+      "name": "Polis",
+      "year": 2020,
+      "rating": 8.09342,
+      "votes": 971
+    },
+    {
+      "bgg_id": 294514,
+      "rank": 1973,
+      "name": "5-Minute Mystery",
+      "year": 2020,
+      "rating": 7.00231,
+      "votes": 2345
+    },
+    {
+      "bgg_id": 4636,
+      "rank": 1974,
+      "name": "Clans",
+      "year": 2002,
+      "rating": 6.57615,
+      "votes": 5304
+    },
+    {
+      "bgg_id": 401216,
+      "rank": 1975,
+      "name": "Cascadero",
+      "year": 2024,
+      "rating": 7.30961,
+      "votes": 1549
+    },
+    {
+      "bgg_id": 300683,
+      "rank": 1976,
+      "name": "Meeple Land",
+      "year": 2020,
+      "rating": 7.20156,
+      "votes": 1907
+    },
+    {
+      "bgg_id": 267271,
+      "rank": 1980,
+      "name": "Egizia: Shifting Sands",
+      "year": 2019,
+      "rating": 7.46943,
+      "votes": 1373
+    },
+    {
+      "bgg_id": 47055,
+      "rank": 1981,
+      "name": "High Frontier",
+      "year": 2010,
+      "rating": 7.34577,
+      "votes": 1561
+    },
+    {
+      "bgg_id": 165948,
+      "rank": 1983,
+      "name": "Mangrovia",
+      "year": 2014,
+      "rating": 7.15975,
+      "votes": 1838
+    },
+    {
+      "bgg_id": 335275,
+      "rank": 1985,
+      "name": "Whirling Witchcraft",
+      "year": 2021,
+      "rating": 7.17255,
+      "votes": 1928
+    },
+    {
+      "bgg_id": 207572,
+      "rank": 1986,
+      "name": "Holland '44: Operation Market-Garden",
+      "year": 2017,
+      "rating": 8.27233,
+      "votes": 928
+    },
+    {
+      "bgg_id": 223215,
+      "rank": 1989,
+      "name": "Flip Ships",
+      "year": 2017,
+      "rating": 6.98822,
+      "votes": 2229
+    },
+    {
+      "bgg_id": 366752,
+      "rank": 1990,
+      "name": "The Great Split",
+      "year": 2022,
+      "rating": 7.00383,
+      "votes": 2148
+    },
+    {
+      "bgg_id": 343526,
+      "rank": 1991,
+      "name": "G.I. JOE Deck-Building Game",
+      "year": 2021,
+      "rating": 7.67616,
+      "votes": 1308
+    },
+    {
+      "bgg_id": 362976,
+      "rank": 1993,
+      "name": "Beacon Patrol",
+      "year": 2023,
+      "rating": 7.14847,
+      "votes": 1970
+    },
+    {
+      "bgg_id": 363183,
+      "rank": 1994,
+      "name": "Tokaido Duo",
+      "year": 2022,
+      "rating": 7.36872,
+      "votes": 1534
+    },
+    {
+      "bgg_id": 123239,
+      "rank": 1995,
+      "name": "Wits & Wagers Party",
+      "year": 2012,
+      "rating": 6.8957,
+      "votes": 2620
+    },
+    {
+      "bgg_id": 43868,
+      "rank": 1997,
+      "name": "The Adventurers: The Temple of Chac",
+      "year": 2009,
+      "rating": 6.60623,
+      "votes": 4914
+    },
+    {
+      "bgg_id": 383206,
+      "rank": 1998,
+      "name": "Freelancers: A Crossroads Game",
+      "year": 2023,
+      "rating": 7.81601,
+      "votes": 1083
+    },
+    {
+      "bgg_id": 34297,
+      "rank": 2000,
+      "name": "The Climbers",
+      "year": 2008,
+      "rating": 6.75096,
+      "votes": 3314
+    }
+  ],
+  "missing_bgg_ids": [
+    39953,
+    157526,
+    164338,
+    134253,
+    202077,
+    249746,
+    18258,
+    1261,
+    316858,
+    50768,
+    191876,
+    225244,
+    367517,
+    243759,
+    159503,
+    224821,
+    227456,
+    348220,
+    204836,
+    7805,
+    345976,
+    300442,
+    205716,
+    270871,
+    113873,
+    151771,
+    312859,
+    157001,
+    253759,
+    38159,
+    394,
+    327778,
+    219100,
+    322656,
+    411875,
+    300001,
+    232988,
+    223931,
+    331050,
+    257527,
+    257769,
+    23094,
+    38713,
+    328326,
+    204505,
+    9203,
+    38863,
+    331224,
+    163474,
+    1897,
+    281946,
+    244918,
+    206803,
+    2338,
+    217085,
+    366683,
+    205418,
+    63975,
+    315727,
+    98527,
+    215471,
+    12495,
+    167270,
+    42487,
+    338376,
+    386937,
+    393429,
+    244191,
+    134453,
+    103,
+    304285,
+    117985,
+    127024,
+    248125,
+    57390,
+    246663,
+    113401,
+    624,
+    15,
+    215841,
+    358981,
+    106,
+    272453,
+    412865,
+    60435,
+    352695,
+    10640,
+    167513,
+    180040,
+    33604,
+    172385,
+    166226,
+    21441,
+    233020,
+    403754,
+    425428,
+    360153,
+    212516,
+    146910,
+    72991,
+    174837,
+    159109,
+    370164,
+    216201,
+    166857,
+    184424,
+    165950,
+    15126,
+    347013,
+    19237,
+    66,
+    215842,
+    216091,
+    2122,
+    179572,
+    336929,
+    19999,
+    348096,
+    55829,
+    391795,
+    264647,
+    338460,
+    3284,
+    139030,
+    283317,
+    255675,
+    371972,
+    29223,
+    355326,
+    191894,
+    142992,
+    179460,
+    94362,
+    196202,
+    330950,
+    282853,
+    1568,
+    71836,
+    325698,
+    422780,
+    63170,
+    2065,
+    3955,
+    306709,
+    176229,
+    218530,
+    382518,
+    811,
+    175549,
+    294693,
+    176083,
+    181810,
+    331401,
+    318546,
+    282414,
+    371932,
+    407343,
+    129051,
+    328124,
+    175223,
+    301716,
+    406291,
+    205317,
+    143175,
+    22,
+    119,
+    356414,
+    223740,
+    351476,
+    271321,
+    21550,
+    138431,
+    252929,
+    1915,
+    101785,
+    358737,
+    18745,
+    312251,
+    260300,
+    356754,
+    24827,
+    422674,
+    337787,
+    364186,
+    17223,
+    75165,
+    180020,
+    297486,
+    24417,
+    120523,
+    619,
+    233678,
+    1198,
+    405537,
+    390340,
+    393307,
+    332321,
+    166571,
+    275044,
+    67877,
+    109125,
+    1829,
+    115,
+    240567,
+    235555,
+    195544,
+    266967,
+    270109,
+    22877,
+    181524,
+    168,
+    20542,
+    3072,
+    2987,
+    275913,
+    289081,
+    195856,
+    381819,
+    38718,
+    494,
+    398,
+    98,
+    215840,
+    73664,
+    385680,
+    314745,
+    323255,
+    230889,
+    295905,
+    424219,
+    244513,
+    148951,
+    339214,
+    14254,
+    183231,
+    422541,
+    260789,
+    13780,
+    266083,
+    230267,
+    148203,
+    38545,
+    192860,
+    171662,
+    43022,
+    295577,
+    352179,
+    329226,
+    31497,
+    302260,
+    183284,
+    146816,
+    204135,
+    144041,
+    388367,
+    277927,
+    156714,
+    218804,
+    99975,
+    340364,
+    102435,
+    269752,
+    84732,
+    235014,
+    34194,
+    320390,
+    259298,
+    386166,
+    361788,
+    5206,
+    285905,
+    245354,
+    131111,
+    40270,
+    26,
+    362020,
+    122294,
+    422332,
+    12761,
+    361,
+    269968,
+    206940,
+    46396,
+    274841,
+    157917,
+    303551,
+    294514,
+    4636,
+    401216,
+    300683,
+    267271,
+    47055,
+    165948,
+    335275,
+    207572,
+    223215,
+    366752,
+    343526,
+    362976,
+    363183,
+    123239,
+    43868,
+    383206,
+    34297
+  ],
+  "last_updated": "2025-08-13T15:45:36.149Z",
+  "import_progress": "0/304 completed (0.0%)"
+}

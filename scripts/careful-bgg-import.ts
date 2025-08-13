@@ -69,8 +69,51 @@ async function fetchTopGamesList(): Promise<string[]> {
   // First, check if we have a missing games file from find-missing-games script
   const fs = require('fs');
   const path = require('path');
+  
+  // Check for 2000-2500 range file first, then 1500-2000, then original
+  const missing2000to2500Path = path.join(process.cwd(), 'missing-games-2000-2500.json');
+  const missing1500to2000Path = path.join(process.cwd(), 'missing-games-1500-2000.json');
   const missingGamesPath = path.join(process.cwd(), 'missing-games.json');
   
+  // Try the 2000-2500 file first
+  if (fs.existsSync(missing2000to2500Path)) {
+    try {
+      console.log('📁 Found missing-games-2000-2500.json, using those game IDs...');
+      const missingGamesData = JSON.parse(fs.readFileSync(missing2000to2500Path, 'utf8'));
+      const gameIds = missingGamesData.missing_bgg_ids?.map((id: number) => id.toString()) || [];
+      
+      if (gameIds.length > 0) {
+        console.log(`🎯 Using ${gameIds.length} missing games from 2000-2500 range analysis`);
+        console.log(`📊 These are games ranked ${missingGamesData.rank_range || '2000-2500'} on BGG`);
+        return gameIds;
+      } else {
+        console.log('⚠️  missing-games-2000-2500.json exists but contains no game IDs');
+      }
+    } catch (error) {
+      console.warn('⚠️  Could not read missing-games-2000-2500.json:', error);
+    }
+  }
+  
+  // Fall back to 1500-2000 file
+  if (fs.existsSync(missing1500to2000Path)) {
+    try {
+      console.log('📁 Found missing-games-1500-2000.json, using those game IDs...');
+      const missingGamesData = JSON.parse(fs.readFileSync(missing1500to2000Path, 'utf8'));
+      const gameIds = missingGamesData.missing_bgg_ids?.map((id: number) => id.toString()) || [];
+      
+      if (gameIds.length > 0) {
+        console.log(`🎯 Using ${gameIds.length} missing games from 1500-2000 range analysis`);
+        console.log(`📊 These are games ranked ${missingGamesData.rank_range || '1500-2000'} on BGG`);
+        return gameIds;
+      } else {
+        console.log('⚠️  missing-games-1500-2000.json exists but contains no game IDs');
+      }
+    } catch (error) {
+      console.warn('⚠️  Could not read missing-games-1500-2000.json:', error);
+    }
+  }
+  
+  // Fall back to original missing-games.json
   if (fs.existsSync(missingGamesPath)) {
     try {
       console.log('📁 Found missing-games.json, using those game IDs...');
@@ -283,7 +326,7 @@ async function insertGame(game: BGGGame): Promise<boolean> {
 
 // Main import function
 async function importTopGames() {
-  console.log('🎲 Starting careful BGG import...');
+  console.log('🎲 Starting careful BGG import (prioritizing games 2000-2500)...');
   console.log(`Rate limit: ${REQUESTS_PER_MINUTE} requests/minute (${REQUEST_DELAY}ms delay)`);
   console.log(`Batch size: ${BATCH_SIZE} games per batch`);
   
@@ -291,7 +334,7 @@ async function importTopGames() {
     // Get existing games to avoid duplicates
     const existingIds = await getExistingGameIds();
     
-    // Get top games list
+    // Get top games list (will prioritize 2000-2500 if file exists)
     const topGameIds = await fetchTopGamesList();
     
     // Filter out games we already have

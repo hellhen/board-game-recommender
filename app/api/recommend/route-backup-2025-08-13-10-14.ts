@@ -190,51 +190,19 @@ async function matchRecommendationsToDatabase(
 ): Promise<SommelierResponse> {
   console.log('🔍 Matching AI recommendations to database...');
   
-  // First, check if user has specific requirements that we should validate
-  const searchResult = await intelligentGameSearch(userPrompt, 10); // Small sample just to extract requirements
-  const { requestedMechanics } = searchResult;
-  
-  const hasSpecificRequirements = requestedMechanics.length > 0;
-  console.log(`🎯 User requirements detected: ${hasSpecificRequirements ? requestedMechanics.join(', ') : 'none'}`);
-  
   const matchedGames = [];
   const unmatchedGames = [];
-  const validationWarnings = [];
   
   for (const aiRec of aiResponse.recommendations || []) {
     // Try to find this game in our database with fuzzy matching
     const match = await findBestGameMatch(aiRec.title, allGames);
     
     if (match) {
-      let shouldInclude = true;
-      let warningNote = '';
-      
-      // Only validate if user had specific requirements
-      if (hasSpecificRequirements) {
-        const validation = validateGameMechanics(match, requestedMechanics);
-        
-        if (validation.score === 0) {
-          // Game has NONE of the requested mechanics - this is a hallucination
-          console.log(`❌ VALIDATION FAILED: "${aiRec.title}" → "${match.title}" has none of the requested mechanics: ${requestedMechanics.join(', ')}`);
-          shouldInclude = false;
-          validationWarnings.push(`${match.title} doesn't actually have ${requestedMechanics.join(' or ')} mechanics`);
-        } else if (validation.score < 1.0) {
-          // Game has some but not all requested mechanics - note the discrepancy
-          console.log(`⚠️  PARTIAL MATCH: "${match.title}" has ${validation.valid.join(', ')} but missing ${validation.invalid.join(', ')}`);
-          warningNote = `Note: Has ${validation.valid.join(', ')} but not ${validation.invalid.join(', ')}`;
-        } else {
-          console.log(`✅ VALIDATED: "${match.title}" has all requested mechanics: ${validation.valid.join(', ')}`);
-        }
-      }
-      
-      if (shouldInclude) {
-        console.log(`✅ Matched "${aiRec.title}" → "${match.title}"${hasSpecificRequirements ? ' (validated)' : ''}`);
-        matchedGames.push({
-          aiRecommendation: aiRec,
-          dbGame: match,
-          validationNote: warningNote
-        });
-      }
+      console.log(`✅ Matched "${aiRec.title}" → "${match.title}"`);
+      matchedGames.push({
+        aiRecommendation: aiRec,
+        dbGame: match
+      });
     } else {
       console.log(`❌ Could not match "${aiRec.title}"`);
       unmatchedGames.push(aiRec);
@@ -242,13 +210,12 @@ async function matchRecommendationsToDatabase(
   }
   
   // Convert matched games to recommendations
-  const recommendations = matchedGames.map(({ aiRecommendation, dbGame, validationNote }) => ({
+  const recommendations = matchedGames.map(({ aiRecommendation, dbGame }) => ({
     id: dbGame.id || '',
     title: dbGame.title,
     sommelierPitch: aiRecommendation.sommelierPitch || generateSimplePitch(dbGame, userPrompt),
     whyItFits: [
-      aiRecommendation.reasoning || 'Excellent match for your request',
-      ...(validationNote ? [validationNote] : [])
+      aiRecommendation.reasoning || 'Excellent match for your request'
     ],
     specs: {
       players: dbGame.players || null,
@@ -261,23 +228,14 @@ async function matchRecommendationsToDatabase(
     alternates: []
   }));
   
-  // Create follow-ups for unmatched games and validation warnings
+  // Create follow-ups for unmatched games
   const followUps = [];
   if (unmatchedGames.length > 0) {
     followUps.push(`I also wanted to recommend ${unmatchedGames.slice(0, 2).map(g => g.title).join(' and ')}, but they're not in our database.`);
     followUps.push('Want me to suggest similar games that we do have?');
   }
   
-  if (validationWarnings.length > 0) {
-    followUps.push(`FYI: ${validationWarnings.join('. ')}.`);
-  }
-  
-  if (hasSpecificRequirements && recommendations.length > 0) {
-    followUps.push(`All recommendations have been validated against your ${requestedMechanics.join(', ')} requirements.`);
-  }
-
-  const validationSummary = hasSpecificRequirements ? ` Validated against: ${requestedMechanics.join(', ')}.` : '';
-  const notes = `AI recommended ${(aiResponse.recommendations || []).length} games, matched ${recommendations.length} to database.${validationSummary} ${unmatchedGames.length > 0 ? `Couldn't find: ${unmatchedGames.map(g => g.title).join(', ')}.` : ''}`;
+  const notes = `AI recommended ${(aiResponse.recommendations || []).length} games, matched ${recommendations.length} to database. ${unmatchedGames.length > 0 ? `Couldn't find: ${unmatchedGames.map(g => g.title).join(', ')}.` : ''}`;
   
   return {
     followUps,
@@ -290,7 +248,7 @@ async function matchRecommendationsToDatabase(
 }
 
 /**
- * Improved game matching with balanced fuzzy logic
+ * Improved game matching with fuzzy logic
  */
 async function findBestGameMatch(aiTitle: string, allGames: any[]): Promise<any | null> {
   const normalizeTitle = (title: string) => 
@@ -299,11 +257,7 @@ async function findBestGameMatch(aiTitle: string, allGames: any[]): Promise<any 
       .replace(/\s+/g, ' ')    // Normalize spaces
       .trim();
 
-  const removeArticles = (title: string) =>
-    title.replace(/^(the|a|an)\s+/i, '').trim();
-
   const normalizedAiTitle = normalizeTitle(aiTitle);
-  const aiTitleNoArticles = normalizeTitle(removeArticles(aiTitle));
   
   // Try exact match first
   let match = allGames.find(game => 
@@ -311,96 +265,36 @@ async function findBestGameMatch(aiTitle: string, allGames: any[]): Promise<any 
   );
   
   if (match) {
-    console.log(`🎯 EXACT match: "${aiTitle}" → "${match.title}"`);
     return match;
   }
   
-  // Try exact match ignoring articles (the, a, an)
-  match = allGames.find(game => {
-    const gameTitle = normalizeTitle(game.title);
-    const gameTitleNoArticles = normalizeTitle(removeArticles(game.title));
-    return gameTitle === aiTitleNoArticles || 
-           gameTitleNoArticles === normalizedAiTitle ||
-           gameTitleNoArticles === aiTitleNoArticles;
-  });
-  
-  if (match) {
-    console.log(`🎯 EXACT match (ignoring articles): "${aiTitle}" → "${match.title}"`);
-    return match;
-  }
-  
-  // Try prefix matching (for games like "7 Wonders" vs "7 Wonders Duel")
-  const aiWords = aiTitleNoArticles.split(' ').filter(word => word.length > 2);
-  
-  if (aiWords.length >= 2) {
-    // Look for games that start with the same significant words
+  // Try partial matches with good confidence
+  const words = normalizedAiTitle.split(' ').filter(word => word.length > 2);
+  if (words.length >= 2) {
     match = allGames.find(game => {
-      const gameWords = normalizeTitle(removeArticles(game.title)).split(' ').filter(word => word.length > 2);
-      if (gameWords.length < aiWords.length) return false;
-      
-      // Check if all AI words appear in the same order at the start of game title
-      for (let i = 0; i < aiWords.length; i++) {
-        if (gameWords[i] !== aiWords[i]) {
-          return false;
-        }
-      }
-      return true;
+      const gameWords = normalizeTitle(game.title).split(' ').filter(word => word.length > 2);
+      const commonWords = words.filter(word => gameWords.includes(word));
+      const confidence = commonWords.length / words.length;
+      return confidence >= 0.7; // At least 70% word match
     });
     
     if (match) {
-      console.log(`🎯 PREFIX match: "${aiTitle}" → "${match.title}"`);
       return match;
     }
   }
   
-  // Try high-confidence word overlap (most AI words must be present)
-  if (aiWords.length >= 2) {
-    match = allGames.find(game => {
-      const gameWords = normalizeTitle(removeArticles(game.title)).split(' ').filter(word => word.length > 2);
-      const matchingWords = aiWords.filter(aiWord => gameWords.includes(aiWord));
-      const confidence = matchingWords.length / aiWords.length;
-      
-      // Require at least 80% word overlap and at least 2 matching words
-      return confidence >= 0.8 && matchingWords.length >= 2;
-    });
+  // Try single word match for simple titles
+  if (words.length === 1 && words[0].length > 3) {
+    match = allGames.find(game => 
+      normalizeTitle(game.title).includes(words[0]) ||
+      words[0].includes(normalizeTitle(game.title).split(' ')[0])
+    );
     
     if (match) {
-      console.log(`🎯 HIGH-CONFIDENCE word overlap: "${aiTitle}" → "${match.title}"`);
       return match;
     }
   }
   
-  // Try medium-confidence word overlap for longer titles
-  if (aiWords.length >= 3) {
-    match = allGames.find(game => {
-      const gameWords = normalizeTitle(removeArticles(game.title)).split(' ').filter(word => word.length > 2);
-      const matchingWords = aiWords.filter(aiWord => gameWords.includes(aiWord));
-      const confidence = matchingWords.length / aiWords.length;
-      
-      // For longer titles, allow 70% overlap
-      return confidence >= 0.7 && matchingWords.length >= 3;
-    });
-    
-    if (match) {
-      console.log(`🎯 MEDIUM-CONFIDENCE word overlap: "${aiTitle}" → "${match.title}"`);
-      return match;
-    }
-  }
-  
-  // For single words, only match if the word is significant and matches exactly
-  if (aiWords.length === 1 && aiWords[0].length >= 5) {
-    match = allGames.find(game => {
-      const gameWords = normalizeTitle(removeArticles(game.title)).split(' ').filter(word => word.length > 2);
-      return gameWords.includes(aiWords[0]);
-    });
-    
-    if (match) {
-      console.log(`🎯 SINGLE-WORD match: "${aiTitle}" → "${match.title}"`);
-      return match;
-    }
-  }
-  
-  console.log(`❌ NO MATCH found for: "${aiTitle}"`);
   return null;
 }
 function createDiverseGameSelection(allGames: any[], targetCount: number): any[] {
