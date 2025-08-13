@@ -120,37 +120,11 @@ async function getLLMRecommendationsThenMatch(
   openaiApiKey: string, 
   model: string
 ): Promise<SommelierResponse> {
-  const generalSystemPrompt = `You are The Board Game Sommelier — a sassy, brutally honest, and devastatingly knowledgeable recommender for tabletop games.
-
-Your expertise comes from years of experience with thousands of board games. You understand what makes games great and can match them perfectly to user needs.
-
-RECOMMENDATION APPROACH:
-- Analyze the user's request for mood, situation, preferences, and constraints
-- Pick 8-10 games from your general knowledge that genuinely fit what they're looking for
-- Focus on games that will create the experience they want
-- Use your knowledge of popular, well-regarded games
-
-Goals:
-- Understand what the user REALLY needs (not just what they say)
-- Pick games that will actually work for their situation
-- Provide witty, insightful commentary that shows deep game knowledge
-
-You MUST return JSON in this EXACT format:
-{
-  "recommendations": [
-    {
-      "title": "Game Title",
-      "sommelierPitch": "YOUR CREATIVE, WITTY ONE-LINER HERE",
-      "reasoning": "Why this game fits their request"
-    }
-  ]
-}`;
-
   const aiPrompt = `User request: "${userPrompt}"
 
-Please recommend 8-10 board games that would be perfect for this request. Focus on recommending the absolute best games for this situation. Use your general knowledge of board games to pick truly excellent matches.
+Please recommend 8-10 board games that would be perfect for this request. Focus on recommending the absolute best games for this situation, regardless of availability. Use your general knowledge of board games to pick truly excellent matches.
 
-You must respond with valid JSON following the schema specified in your system prompt.`;
+You must respond with valid JSON following the schema specified in your system prompt. Don't worry about whether these games are in any specific database - just recommend the best games for this request.`;
 
   try {
     const openai = new OpenAI({ apiKey: openaiApiKey });
@@ -159,7 +133,7 @@ You must respond with valid JSON following the schema specified in your system p
     const completion = await openai.chat.completions.create({
       model,
       messages: [
-        { role: 'system', content: generalSystemPrompt },
+        { role: 'system', content: ENHANCED_SYSTEM_PROMPT },
         { role: 'user', content: aiPrompt }
       ],
       temperature: 0.8,
@@ -217,7 +191,9 @@ async function matchRecommendationsToDatabase(
     title: dbGame.title,
     sommelierPitch: aiRecommendation.sommelierPitch || generateSimplePitch(dbGame, userPrompt),
     whyItFits: [
-      aiRecommendation.reasoning || 'Excellent match for your request'
+      aiRecommendation.reasoning || 'Excellent match for your request',
+      `Actual mechanics: ${(dbGame.mechanics || []).slice(0, 3).join(', ') || 'Various'}`,
+      `${dbGame.complexity ? `Complexity: ${dbGame.complexity}` : ''} | ${dbGame.players || 'Variable players'} | ${dbGame.playtime || 'Variable time'}`
     ],
     specs: {
       players: dbGame.players || null,
@@ -378,7 +354,8 @@ function validateAndCleanRecommendations(aiResponse: any, allGames: any[], userP
       sommelierPitch: rec.sommelierPitch || generateSimplePitch(actualGame, userPrompt),
       whyItFits: [
         rec.reasoning || `Great match for your request`,
-        `${actualGame.players || 'Variable players'} | ${actualGame.playtime || 'Variable time'}`
+        `Actual mechanics: ${actualMechanics.slice(0, 3).join(', ')}`,
+        `${actualGame.complexity ? `Complexity: ${actualGame.complexity}` : ''} | ${actualGame.players || 'Variable players'} | ${actualGame.playtime || 'Variable time'}`
       ],
       specs: {
         players: actualGame.players || null,
