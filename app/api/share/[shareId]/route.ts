@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
+import { getShareFileAge } from '../../../../lib/share-cleanup';
 
 // Directory to store shared recommendations
 const SHARES_DIR = path.join(process.cwd(), 'data', 'shares');
@@ -28,6 +29,17 @@ export async function GET(
     try {
       const fileContent = await fs.readFile(filePath, 'utf8');
       const shareData = JSON.parse(fileContent);
+      
+      // Check if file is expired (older than 30 days)
+      const fileAge = await getShareFileAge(shareId);
+      if (fileAge !== null && fileAge > 30) {
+        // Delete expired file
+        await fs.unlink(filePath);
+        return NextResponse.json(
+          { error: 'This shared recommendation has expired' },
+          { status: 410 }
+        );
+      }
       
       // Increment view count
       shareData.viewCount = (shareData.viewCount || 0) + 1;

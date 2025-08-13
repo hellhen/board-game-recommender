@@ -6,10 +6,8 @@ import { getAllGames } from '../../../lib/database';
 import { intelligentGameSearch, validateGameMechanics, getAllMechanics } from '../../../lib/enhanced-database';
 import { supabase } from '../../../lib/supabase';
 import { ENHANCED_SYSTEM_PROMPT } from '../../../lib/enhanced-prompt';
-
-// Simple rate limiting - store last request times by IP
-const rateLimitMap = new Map<string, number>();
-const RATE_LIMIT_MS = 10000; // 10 seconds between requests per IP
+import { recommendationRateLimit, getClientIdentifier } from '../../../lib/rate-limit';
+import { logRateLimit, logInvalidInput, logError } from '../../../lib/security-logger';
 
 /**
  * Simple, effective recommendation system that lets LLM pick freely but validates results
@@ -560,24 +558,39 @@ export async function POST(req: NextRequest) {
   let userPrompt = '';
   
   try {
-    // Basic rate limiting
-    const clientIP = req.ip || req.headers.get('x-forwarded-for') || 'localhost';
-    const now = Date.now();
-    const lastRequest = rateLimitMap.get(clientIP);
+    // Advanced rate limiting with abuse detection
+    const clientId = getClientIdentifier(req);
+    const rateLimitResult = recommendationRateLimit.check(clientId);
     
-    if (lastRequest && now - lastRequest < RATE_LIMIT_MS) {
+    if (!rateLimitResult.allowed) {
+      logRateLimit(clientId, '/api/recommend', { 
+        remaining: rateLimitResult.remaining,
+        resetTime: rateLimitResult.resetTime 
+      });
+      
       return NextResponse.json(
-        { error: 'Rate limit exceeded. Please wait a moment before making another request.' },
-        { status: 429 }
+        { 
+          error: 'Rate limit exceeded. Please wait before making another request.',
+          resetTime: new Date(rateLimitResult.resetTime).toISOString()
+        },
+        { 
+          status: 429,
+          headers: {
+            'Retry-After': Math.ceil((rateLimitResult.resetTime - Date.now()) / 1000).toString(),
+            'X-RateLimit-Limit': '6',
+            'X-RateLimit-Remaining': rateLimitResult.remaining.toString(),
+            'X-RateLimit-Reset': rateLimitResult.resetTime.toString()
+          }
+        }
       );
     }
-    
-    rateLimitMap.set(clientIP, now);
     
     const { prompt } = await req.json();
     userPrompt = prompt;
     
     if (!prompt || typeof prompt !== 'string') {
+      logInvalidInput(clientId, '/api/recommend', 'Missing or invalid prompt');
+      
       return NextResponse.json(
         { error: 'Valid prompt is required' }, 
         { status: 400 }
@@ -590,6 +603,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(response);
     
   } catch (error) {
+    logError(getClientIdentifier(req), '/api/recommend', error);
     console.error('Error in enhanced recommendation API:', error);
     
     return NextResponse.json(

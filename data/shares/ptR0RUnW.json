@@ -1,0 +1,242 @@
+{
+  "shareId": "ptR0RUnW",
+  "title": "Board game recommendations for \"Something strategic that won't melt my brain...\"",
+  "prompt": "Something strategic that won't melt my brain",
+  "recommendations": [
+    {
+      "id": "5686bd2b-5c76-493a-aa09-95b85c641a97",
+      "title": "Ticket to Ride",
+      "sommelierPitch": "All aboard the strategy express — no brain frying required!",
+      "whyItFits": [
+        "This classic train game combines strategic route planning and light competition without overwhelming your cognitive circuits."
+      ],
+      "specs": {
+        "players": "2–5 (best 4)",
+        "playtime": "30–60 min",
+        "complexity": 1.8
+      },
+      "mechanics": [
+        "connections",
+        "contracts",
+        "end-game-bonuses",
+        "hand-management",
+        "network-and-route-building"
+      ],
+      "theme": "strategy",
+      "price": {
+        "amount": null,
+        "store": null,
+        "url": null
+      },
+      "alternates": []
+    },
+    {
+      "id": "1d4b7d38-e0f0-4356-9eb9-51f30451c86f",
+      "title": "Carcassonne",
+      "sommelierPitch": "Put your tile-laying skills to the test, but keep your brain nice and cozy!",
+      "whyItFits": [
+        "Easy to learn yet offers strategic depth through placement and area control, perfect for a relaxed yet tactical experience."
+      ],
+      "specs": {
+        "players": "2–5 (best 4)",
+        "playtime": "30–45 min",
+        "complexity": 1.9
+      },
+      "mechanics": [
+        "area-majority---influence",
+        "enclosure",
+        "kill-steal",
+        "map-addition",
+        "modular-board"
+      ],
+      "theme": "medieval",
+      "price": {
+        "amount": null,
+        "store": null,
+        "url": null
+      },
+      "alternates": []
+    },
+    {
+      "id": "b44eae10-8c8c-4086-9587-b6766a7ec015",
+      "title": "Kingdomino",
+      "sommelierPitch": "Dominoes just got a royal upgrade — strategy fit for a king without the headache!",
+      "whyItFits": [
+        "This quick game encourages strategic thinking through tile placement while keeping the complexity manageable and fun."
+      ],
+      "specs": {
+        "players": "2-4",
+        "playtime": "25 min",
+        "complexity": 1.2
+      },
+      "mechanics": [
+        "enclosure",
+        "open-drafting",
+        "tile-placement",
+        "turn-order:-claim-action"
+      ],
+      "theme": "Fantasy",
+      "price": {
+        "amount": null,
+        "store": null,
+        "url": null
+      },
+      "alternates": []
+    },
+    {
+      "id": "96395959-8edd-4eed-91e1-83207fb64787",
+      "title": "Azul",
+      "sommelierPitch": "Splat some color on your brain without splattering it all over the wall!",
+      "whyItFits": [
+        "A beautifully designed game that offers strategic depth with simple mechanics, allowing you to plan without overthinking."
+      ],
+      "specs": {
+        "players": "2–4",
+        "playtime": "30–45 min",
+        "complexity": 2.3
+      },
+      "mechanics": [
+        "tile-laying",
+        "pattern-building"
+      ],
+      "theme": "abstract/tiles",
+      "price": {
+        "amount": null,
+        "store": null,
+        "url": null
+      },
+      "alternates": []
+    },
+    {
+      "id": "7d13bb65-246c-4abb-b098-644ee270ba0f",
+      "title": "Splendor",
+      "sommelierPitch": "Collect gems and build an empire without needing a PhD in strategy!",
+      "whyItFits": [
+        "With straightforward rules and a focus on resource management, this game offers strategic choices without the mental overload."
+      ],
+      "specs": {
+        "players": "2–4",
+        "playtime": "30 min",
+        "complexity": 2
+      },
+      "mechanics": [
+        "set-collection",
+        "engine-building"
+      ],
+      "theme": "renaissance/gems",
+      "price": {
+        "amount": null,
+        "store": null,
+        "url": null
+      },
+      "alternates": []
+    },
+    {
+      "id": "414bd32c-0711-4fab-8ee5-7c1a51af7301",
+      "title": "7 Wonders",
+      "sommelierPitch": "Build your ancient civilization without the risk of ancient brain freeze!",
+      "whyItFits": [
+        "A card drafting game that balances strategy with a light touch, allowing you to strategize across multiple rounds without stress."
+      ],
+      "specs": {
+        "players": "2–7",
+        "playtime": "30 min",
+        "complexity": 2.3
+      },
+      "mechanics": [
+        "drafting",
+        "tableau-building"
+      ],
+      "theme": "ancient-civilizations",
+      "price": {
+        "amount": null,
+        "store": null,
+        "url": null
+      },
+      "alternates": []
+    },
+    {
+      "id": "13089e47-0a33-47ee-b26d-c2fe264a1a90",
+      "title": "Sushi Go!",
+      "sommelierPitch": "Grab a bite of strategy without a side of confusion!",
+      "whyItFits": [
+        "A fast-paced card drafting game that's easy to learn and offers a delightful mix of strategy and fun, perfect for light gaming sessions."
+      ],
+      "specs": {
+        "players": "2-5",
+        "playtime": "15 min",
+        "complexity": 1.2
+      },
+      "mechanics": [
+        "closed-drafting",
+        "end-game-bonuses",
+        "hand-management",
+        "score-and-reset-game",
+        "set-collection",
+        "simultaneous-action-selection"
+      ],
+      "theme": "Party",
+      "price": {
+        "amount": null,
+        "store": null,
+        "url": null
+      },
+      "alternates": []
+    },
+    {
+      "id": "7948cda2-5b6e-469e-b950-b80c01ff2814",
+      "title": "Catan",
+      "sommelierPitch": "Trade your way to victory without the risk of strategy-induced migraines!",
+      "whyItFits": [
+        "This classic game offers strategic depth through trading and resource management, but remains accessible and enjoyable for all."
+      ],
+      "specs": {
+        "players": "3–4",
+        "playtime": "60–120 min",
+        "complexity": 2.3
+      },
+      "mechanics": [
+        "dice-rolling",
+        "trading",
+        "modular-board"
+      ],
+      "theme": "medieval/exploration",
+      "price": {
+        "amount": null,
+        "store": null,
+        "url": null
+      },
+      "alternates": []
+    },
+    {
+      "id": "7568b8fe-1e8e-408d-8563-5114602e096e",
+      "title": "Patchwork",
+      "sommelierPitch": "Sew together a quilt of strategy without losing your mind over it!",
+      "whyItFits": [
+        "A delightful two-player game that requires strategic thinking while being simple enough to play without brain overload."
+      ],
+      "specs": {
+        "players": "2–2",
+        "playtime": "15–30 min",
+        "complexity": 1.6
+      },
+      "mechanics": [
+        "grid-coverage",
+        "income",
+        "open-drafting",
+        "rondel",
+        "square-grid"
+      ],
+      "theme": "economy",
+      "price": {
+        "amount": null,
+        "store": null,
+        "url": null
+      },
+      "alternates": []
+    }
+  ],
+  "metadata": null,
+  "createdAt": "2025-08-13T06:39:14.464Z",
+  "viewCount": 2
+}
