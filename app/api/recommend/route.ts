@@ -5,9 +5,74 @@ import { ResponseSchema, SommelierResponse } from '../../../lib/schema';
 import { getAllGames } from '../../../lib/database';
 import { intelligentGameSearch, validateGameMechanics, getAllMechanics } from '../../../lib/enhanced-database';
 import { supabase } from '../../../lib/supabase';
+import { priceService } from '../../../lib/price-service';
 import { ENHANCED_SYSTEM_PROMPT } from '../../../lib/enhanced-prompt';
 import { recommendationRateLimit, getClientIdentifier } from '../../../lib/rate-limit';
 import { logRateLimit, logInvalidInput, logError } from '../../../lib/security-logger';
+
+/**
+ * Enrich recommendations with current price information
+ */
+async function enrichRecommendationsWithPrices(recommendations: any[]): Promise<any[]> {
+  if (!recommendations || recommendations.length === 0) {
+    return recommendations;
+  }
+
+  try {
+    // Get game IDs from recommendations
+    const gameIds = recommendations
+      .map(rec => rec.id)
+      .filter(id => id && id.trim()); // Filter out empty/null IDs
+
+    if (gameIds.length === 0) {
+      console.log('📋 No valid game IDs found for price enrichment');
+      return recommendations;
+    }
+
+    console.log(`💰 Fetching prices for ${gameIds.length} recommended games...`);
+    
+    // Get prices for all recommended games
+    const gamesWithPrices = await priceService.getGamesWithPrices(gameIds);
+    const priceMap = new Map(
+      gamesWithPrices.map(game => [game.id, game])
+    );
+
+    // Enrich each recommendation with price data
+    const enrichedRecommendations = recommendations.map(rec => {
+      const gameWithPrices = priceMap.get(rec.id);
+      
+      if (gameWithPrices?.bestPrice) {
+        return {
+          ...rec,
+          price: {
+            amount: gameWithPrices.bestPrice.price,
+            store: gameWithPrices.bestPrice.store,
+            url: gameWithPrices.bestPrice.url
+          }
+        };
+      } else {
+        // Keep the existing null price structure
+        return {
+          ...rec,
+          price: { amount: null, store: null, url: null }
+        };
+      }
+    });
+
+    const pricesFound = enrichedRecommendations.filter(rec => rec.price.amount !== null).length;
+    console.log(`💰 Added price data to ${pricesFound}/${recommendations.length} recommendations`);
+    
+    return enrichedRecommendations;
+    
+  } catch (error) {
+    console.error('❌ Error enriching recommendations with prices:', error);
+    // Return original recommendations without price data if enrichment fails
+    return recommendations.map(rec => ({
+      ...rec,
+      price: { amount: null, store: null, url: null }
+    }));
+  }
+}
 
 /**
  * Simple, effective recommendation system that lets LLM pick freely but validates results
@@ -706,7 +771,14 @@ export async function POST(req: NextRequest) {
     console.log(`🎯 Enhanced recommendation request: "${userPrompt}"`);
     
     const response = await getEnhancedRecommendations(userPrompt);
-    return NextResponse.json(response);
+    
+    // Enrich recommendations with current pricing data
+    const enrichedResponse = {
+      ...response,
+      recommendations: await enrichRecommendationsWithPrices(response.recommendations)
+    };
+    
+    return NextResponse.json(enrichedResponse);
     
   } catch (error) {
     logError(getClientIdentifier(req), '/api/recommend', error);

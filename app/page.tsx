@@ -296,7 +296,7 @@ export default function Home() {
                 </div>
 
                 {/* Game specs */}
-                <div className="flex flex-wrap gap-4 p-4 bg-wine-800/10 border border-wine-600/20 rounded-2xl">
+                <div className="flex flex-wrap gap-4 p-4 bg-wine-800/10 border border-wine-600/20 rounded-2xl mb-4">
                   {rec.specs?.players && (
                     <div className="flex items-center gap-2">
                       <span className="text-lg">👥</span>
@@ -322,6 +322,37 @@ export default function Home() {
                     </div>
                   )}
                 </div>
+
+                {/* Purchase Links */}
+                {rec.price?.amount && rec.price?.url && (
+                  <div className="mb-4 p-4 bg-gradient-to-r from-green-800/20 to-emerald-800/20 border border-green-600/30 rounded-2xl">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">💰</span>
+                        <div>
+                          <div className="font-semibold text-green-200 text-lg">
+                            ${rec.price.amount.toFixed(2)}
+                          </div>
+                          <div className="text-xs text-green-300 capitalize">
+                            at {rec.price.store?.replace('-', ' ')}
+                          </div>
+                        </div>
+                      </div>
+                      <a 
+                        href={rec.price.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="button bg-green-600 hover:bg-green-500 text-white border-green-500 flex items-center gap-2 text-sm"
+                      >
+                        <span>🛒</span>
+                        Buy Now
+                      </a>
+                    </div>
+                    <div className="mt-2 text-xs text-green-400">
+                      Price updated recently • Click to purchase
+                    </div>
+                  </div>
+                )}
 
                 {/* Alternates */}
                 {rec.alternates && rec.alternates.length > 0 && (
