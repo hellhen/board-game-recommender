@@ -1,0 +1,392 @@
+import { supabase } from './supabase';
+import { amazonAPIService } from './amazon-api-service';
+import { MiniatureMarketScraper } from './price-scraper';
+
+export interface GamePrice {
+  id?: string;
+  game_id: string;
+  store_name: string;
+  price: number;
+  currency: string;
+  url: string;
+  last_updated: string;
+}
+
+export interface GameWithPrices {
+  id: string;
+  title: string;
+  prices: GamePrice[];
+  bestPrice?: {
+    store: string;
+    price: number;
+    url: string;
+    affiliate_url?: string;
+  };
+}
+
+export class EnhancedPriceService {
+  private miniatureMarketScraper: MiniatureMarketScraper;
+
+  constructor() {
+    this.miniatureMarketScraper = new MiniatureMarketScraper();
+  }
+
+  /**
+   * Get current prices for a game from database
+   */
+  async getGamePrices(gameId: string): Promise<GamePrice[]> {
+    try {
+      if (!supabase) {
+        console.error('❌ Supabase client not available');
+        return [];
+      }
+
+      const { data, error } = await supabase
+        .from('game_prices')
+        .select('*')
+        .eq('game_id', gameId)
+        .order('price', { ascending: true });
+
+      if (error) {
+        console.error(`❌ Failed to fetch prices for game ${gameId}:`, error);
+        return [];
+      }
+
+      return data as GamePrice[] || [];
+    } catch (error) {
+      console.error(`❌ Database error fetching prices for ${gameId}:`, error);
+      return [];
+    }
+  }
+
+  /**
+   * Get prices for multiple games at once
+   */
+  async getBulkGamePrices(gameIds: string[]): Promise<Map<string, GamePrice[]>> {
+    try {
+      if (!supabase) {
+        console.warn('⚠️ Supabase not available');
+        return new Map();
+      }
+
+      const { data, error } = await supabase
+        .from('game_prices')
+        .select('*')
+        .in('game_id', gameIds)
+        .order('price', { ascending: true });
+
+      if (error) {
+        console.error(`❌ Failed to fetch bulk prices:`, error);
+        return new Map();
+      }
+
+      const priceMap = new Map<string, GamePrice[]>();
+      for (const price of data || []) {
+        const gameId = price.game_id;
+        if (!priceMap.has(gameId)) {
+          priceMap.set(gameId, []);
+        }
+        priceMap.get(gameId)!.push(price as GamePrice);
+      }
+
+      return priceMap;
+    } catch (error) {
+      console.error(`❌ Database error fetching bulk prices:`, error);
+      return new Map();
+    }
+  }
+
+  /**
+   * Update prices for a specific game using Amazon API and scraping
+   */
+  async updateGamePrices(gameId: string, gameTitle: string, forceUpdate = false): Promise<boolean> {
+    console.log(`🔄 Updating prices for: ${gameTitle} (${gameId})`);
+    
+    // Check if we need to update (skip if updated recently unless forced)
+    if (!forceUpdate) {
+      const existingPrices = await this.getGamePrices(gameId);
+      const recentlyUpdated = existingPrices.some(price => {
+        const hoursSinceUpdate = (Date.now() - new Date(price.last_updated).getTime()) / (1000 * 60 * 60);
+        return hoursSinceUpdate < 24; // Skip if updated within 24 hours
+      });
+
+      if (recentlyUpdated) {
+        console.log(`⏭️ Skipping ${gameTitle} - updated recently`);
+        return true;
+      }
+    }
+
+    let successCount = 0;
+    const errors: string[] = [];
+
+    // 1. Try Amazon API first (most reliable)
+    try {
+      if (amazonAPIService.isAvailable()) {
+        console.log(`📦 Updating Amazon price via API for: ${gameTitle}`);
+        const amazonSuccess = await amazonAPIService.updateGamePrice(gameId, gameTitle);
+        
+        if (amazonSuccess) {
+          successCount++;
+        } else {
+          errors.push('Amazon API: No suitable products found');
+        }
+        
+        // Rate limiting for Amazon API
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      } else {
+        console.log(`⚠️ Amazon API not available, skipping`);
+        errors.push('Amazon API: Not configured');
+      }
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      errors.push(`Amazon API: ${errorMsg}`);
+      console.error(`❌ Amazon API error for ${gameTitle}:`, error);
+    }
+
+    // 2. Try Miniature Market scraping
+    try {
+      console.log(`🏪 Updating Miniature Market price for: ${gameTitle}`);
+      const mmResult = await this.miniatureMarketScraper.searchGame(gameTitle, gameId);
+      
+      if (mmResult.success) {
+        await this.miniatureMarketScraper.savePriceData(gameId, mmResult);
+        successCount++;
+      } else {
+        errors.push(`Miniature Market: ${mmResult.error}`);
+      }
+      
+      // Rate limiting for scraping
+      await new Promise(resolve => setTimeout(resolve, 1500));
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      errors.push(`Miniature Market: ${errorMsg}`);
+      console.error(`❌ Miniature Market error for ${gameTitle}:`, error);
+    }
+
+    if (successCount > 0) {
+      console.log(`✅ Updated ${successCount}/2 prices for ${gameTitle}`);
+      return true;
+    } else {
+      console.warn(`⚠️ Failed to update any prices for ${gameTitle}. Errors: ${errors.join(', ')}`);
+      return false;
+    }
+  }
+
+  /**
+   * Update prices for multiple games in batch
+   */
+  async updateBulkGamePrices(games: Array<{ id: string; title: string }>, maxConcurrent = 2): Promise<number> {
+    console.log(`🔄 Starting bulk price update for ${games.length} games...`);
+    
+    let successCount = 0;
+    const batchSize = maxConcurrent;
+    
+    for (let i = 0; i < games.length; i += batchSize) {
+      const batch = games.slice(i, i + batchSize);
+      console.log(`📦 Processing batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(games.length / batchSize)}`);
+      
+      const batchPromises = batch.map(async (game) => {
+        try {
+          const success = await this.updateGamePrices(game.id, game.title);
+          if (success) successCount++;
+        } catch (error) {
+          console.error(`❌ Error updating ${game.title}:`, error);
+        }
+      });
+
+      await Promise.allSettled(batchPromises);
+      
+      // Wait between batches to be respectful
+      if (i + batchSize < games.length) {
+        console.log('⏳ Waiting between batches...');
+        await new Promise(resolve => setTimeout(resolve, 3000)); // 3 second delay
+      }
+    }
+
+    console.log(`✅ Bulk update complete: ${successCount}/${games.length} games updated`);
+    return successCount;
+  }
+
+  /**
+   * Get games with their current prices, including best price calculation
+   */
+  async getGamesWithPrices(gameIds: string[]): Promise<GameWithPrices[]> {
+    try {
+      // Get game basic info
+      const { data: games, error: gamesError } = await supabase
+        ?.from('games')
+        .select('id, title')
+        .in('id', gameIds);
+
+      if (gamesError) {
+        console.error('❌ Failed to fetch games:', gamesError);
+        return [];
+      }
+
+      // Get prices for all games
+      const priceMap = await this.getBulkGamePrices(gameIds);
+
+      // Combine game data with prices
+      const gamesWithPrices: GameWithPrices[] = (games || []).map(game => {
+        const prices = priceMap.get(game.id) || [];
+        const bestPrice = this.calculateBestPrice(prices);
+        
+        return {
+          id: game.id,
+          title: game.title,
+          prices,
+          bestPrice
+        };
+      });
+
+      return gamesWithPrices;
+    } catch (error) {
+      console.error('❌ Error in getGamesWithPrices:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Calculate the best price from available options
+   */
+  private calculateBestPrice(prices: GamePrice[]): GameWithPrices['bestPrice'] {
+    if (!prices.length) return undefined;
+
+    // Find cheapest price
+    const cheapest = prices.reduce((min, current) => 
+      current.price < min.price ? current : min
+    );
+
+    return {
+      store: cheapest.store_name,
+      price: cheapest.price,
+      url: cheapest.url,
+      affiliate_url: cheapest.url // For now, use the same URL as affiliate
+    };
+  }
+
+  /**
+   * Get price statistics across all games
+   */
+  async getPriceStatistics(): Promise<{
+    totalGamesWithPrices: number;
+    averagePrice: number;
+    pricesByStore: Record<string, { count: number; averagePrice: number }>;
+    lastUpdated: Date;
+  }> {
+    try {
+      const { data, error } = await supabase
+        ?.from('game_prices')
+        .select('game_id, price, store_name, last_updated');
+
+      if (error) {
+        throw error;
+      }
+
+      const prices = data || [];
+      const uniqueGames = new Set(prices.map(p => p.game_id)).size;
+      const averagePrice = prices.reduce((sum, p) => sum + p.price, 0) / prices.length;
+      
+      const pricesByStore: Record<string, { count: number; averagePrice: number }> = {};
+      prices.forEach(price => {
+        if (!pricesByStore[price.store_name]) {
+          pricesByStore[price.store_name] = { count: 0, averagePrice: 0 };
+        }
+        pricesByStore[price.store_name].count++;
+        pricesByStore[price.store_name].averagePrice += price.price;
+      });
+
+      // Calculate averages
+      Object.keys(pricesByStore).forEach(store => {
+        pricesByStore[store].averagePrice /= pricesByStore[store].count;
+      });
+
+      const lastUpdated = prices.length > 0 
+        ? new Date(Math.max(...prices.map(p => new Date(p.last_updated).getTime())))
+        : new Date();
+
+      return {
+        totalGamesWithPrices: uniqueGames,
+        averagePrice,
+        pricesByStore,
+        lastUpdated
+      };
+    } catch (error) {
+      console.error('❌ Error getting price statistics:', error);
+      return {
+        totalGamesWithPrices: 0,
+        averagePrice: 0,
+        pricesByStore: {},
+        lastUpdated: new Date()
+      };
+    }
+  }
+
+  /**
+   * Clean up old price data
+   */
+  async cleanupOldPrices(olderThanDays = 30): Promise<number> {
+    try {
+      const cutoffDate = new Date();
+      cutoffDate.setDate(cutoffDate.getDate() - olderThanDays);
+
+      const { count, error } = await supabase
+        ?.from('game_prices')
+        .delete()
+        .lt('last_updated', cutoffDate.toISOString());
+
+      if (error) {
+        console.error('❌ Failed to cleanup old prices:', error);
+        return 0;
+      }
+
+      console.log(`🧹 Cleaned up ${count || 0} old price records`);
+      return count || 0;
+    } catch (error) {
+      console.error('❌ Error in price cleanup:', error);
+      return 0;
+    }
+  }
+
+  /**
+   * Find games that need price updates
+   */
+  async findGamesNeedingPriceUpdates(maxAge = 24): Promise<Array<{ id: string; title: string }>> {
+    try {
+      // Get all games
+      const { data: allGames, error: gamesError } = await supabase
+        ?.from('games')
+        .select('id, title');
+
+      if (gamesError) {
+        throw gamesError;
+      }
+
+      // Get games with recent prices
+      const cutoffDate = new Date();
+      cutoffDate.setHours(cutoffDate.getHours() - maxAge);
+
+      const { data: recentPrices, error: pricesError } = await supabase
+        ?.from('game_prices')
+        .select('game_id')
+        .gt('last_updated', cutoffDate.toISOString());
+
+      if (pricesError) {
+        throw pricesError;
+      }
+
+      const gamesWithRecentPrices = new Set((recentPrices || []).map(p => p.game_id));
+      
+      return (allGames || [])
+        .filter(game => !gamesWithRecentPrices.has(game.id))
+        .map(game => ({ id: game.id, title: game.title }));
+
+    } catch (error) {
+      console.error('❌ Error finding games needing updates:', error);
+      return [];
+    }
+  }
+}
+
+// Export singleton instance
+export const enhancedPriceService = new EnhancedPriceService();

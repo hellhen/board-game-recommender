@@ -9,6 +9,11 @@ import type { Game } from './supabase';
 export async function getGamesByMechanics(mechanics: string[], limit: number = 50): Promise<Game[]> {
   console.log('🔍 Searching for games with mechanics:', mechanics);
   
+  if (!supabase) {
+    console.warn('⚠️ Supabase not available in getGamesByMechanics');
+    return [];
+  }
+  
   const { data, error } = await supabase
     .from('games')
     .select('*')
@@ -38,6 +43,11 @@ export async function getGamesByMechanics(mechanics: string[], limit: number = 5
 export async function getGamesByAnyMechanic(mechanics: string[], limit: number = 100): Promise<Game[]> {
   console.log('🔍 Searching for games with any of these mechanics:', mechanics);
   
+  if (!supabase) {
+    console.warn('⚠️ Supabase not available in getGamesByAnyMechanic');
+    return [];
+  }
+  
   const { data, error } = await supabase
     .from('games')
     .select('*')
@@ -58,6 +68,11 @@ export async function getGamesByAnyMechanic(mechanics: string[], limit: number =
  * Get all unique mechanics in the database
  */
 export async function getAllMechanics(): Promise<string[]> {
+  if (!supabase) {
+    console.warn('⚠️ Supabase not available in getAllMechanics');
+    return [];
+  }
+
   const { data, error } = await supabase
     .from('games')
     .select('mechanics');
@@ -164,6 +179,11 @@ export async function intelligentGameSearch(userPrompt: string, limit: number = 
   if (games.length < 10) {
     console.log('🌐 Falling back to broader search');
     
+    if (!supabase) {
+      console.warn('⚠️ Supabase not available for broader search');
+      return { games, availableMechanics, requestedMechanics, matchType: 'broad' };
+    }
+    
     // Extract other criteria from prompt
     const complexityHints = extractComplexityFromPrompt(prompt);
     const playerCountHints = extractPlayerCountFromPrompt(prompt);
@@ -215,20 +235,23 @@ export async function intelligentGameSearch(userPrompt: string, limit: number = 
     // If still no games or very few, get a diverse selection of popular/good games
     if (games.length < 5) {
       console.log('🎲 Falling back to diverse selection');
-      const { data: diverseGames, error: diverseError } = await supabase
-        .from('games')
-        .select('*')
+      
+      if (supabase) {
+        const { data: diverseGames, error: diverseError } = await supabase
+          .from('games')
+          .select('*')
         .order('complexity')
         .limit(limit * 2); // Get more to ensure diversity
       
-      if (!diverseError && diverseGames) {
-        // Create a diverse selection across different complexities and themes
-        const diverseSelection = createDiverseSelection(diverseGames, limit);
-        const newGames = diverseSelection.filter(game => 
-          !games.some(existingGame => existingGame.id === game.id)
-        );
-        games = [...games, ...newGames];
-        console.log(`🎲 Added ${newGames.length} diverse games`);
+        if (!diverseError && diverseGames) {
+          // Create a diverse selection across different complexities and themes
+          const diverseSelection = createDiverseSelection(diverseGames, limit);
+          const newGames = diverseSelection.filter(game => 
+            !games.some(existingGame => existingGame.id === game.id)
+          );
+          games = [...games, ...newGames];
+          console.log(`🎲 Added ${newGames.length} diverse games`);
+        }
       }
     }
     

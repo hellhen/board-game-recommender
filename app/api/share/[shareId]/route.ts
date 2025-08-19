@@ -9,6 +9,14 @@ export async function GET(
   { params }: { params: { shareId: string } }
 ) {
   try {
+    // Check if supabase client is available
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Database connection not available' },
+        { status: 503 }
+      );
+    }
+
     const { shareId } = params;
     
     if (!shareId || typeof shareId !== 'string') {
@@ -39,10 +47,12 @@ export async function GET(
     
     if (createdAt < thirtyDaysAgo) {
       // Delete expired share
-      await supabase
-        .from('shared_recommendations')
-        .delete()
-        .eq('share_id', shareId);
+      if (supabase) {
+        await supabase
+          .from('shared_recommendations')
+          .delete()
+          .eq('share_id', shareId);
+      }
         
       return NextResponse.json(
         { error: 'This shared recommendation has expired' },
@@ -56,10 +66,12 @@ export async function GET(
     // Update view count (fire and forget)
     setTimeout(async () => {
       try {
-        await supabase
-          .from('shared_recommendations')
-          .update({ view_count: newViewCount })
-          .eq('share_id', shareId);
+        if (supabase) {
+          await supabase
+            .from('shared_recommendations')
+            .update({ view_count: newViewCount })
+            .eq('share_id', shareId);
+        }
       } catch (error) {
         console.error('Failed to update view count:', error);
       }

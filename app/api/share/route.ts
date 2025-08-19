@@ -15,6 +15,14 @@ const CreateShareSchema = z.object({
  */
 export async function POST(req: NextRequest) {
   try {
+    // Check if supabase client is available
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Database connection not available' },
+        { status: 503 }
+      );
+    }
+
     const body = await req.json();
     const validatedData = CreateShareSchema.parse(body);
     const { prompt, recommendations, metadata, title } = validatedData;

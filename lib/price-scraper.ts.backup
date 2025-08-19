@@ -1,0 +1,974 @@
+import { supabase } from './supabase';
+
+export interface GamePrice {
+  id?: string; // UUID primary key from database
+  game_id: string;
+  store_name: string; // Changed from union type to string
+  price: number;
+  currency: string;
+  url: string;
+  last_updated: string; // ISO string from database
+}
+
+export interface ScrapingResult {
+  success: boolean;
+  price?: number;
+  availability: 'in-stock' | 'out-of-stock' | 'unknown';
+  url?: string;
+  error?: string;
+  confidence: number;
+}
+
+/**
+ * Base class for all price scrapers
+ */
+export abstract class PriceScraper {
+  protected storeName: string; // Changed from union type
+  protected baseUrl: string;
+  protected rateLimit: number; // milliseconds between requests
+
+  constructor(storeName: string, baseUrl: string, rateLimit = 1000) {
+    this.storeName = storeName;
+    this.baseUrl = baseUrl;
+    this.rateLimit = rateLimit;
+  }
+
+  /**
+   * Search for a game and return price information
+   */
+  abstract searchGame(gameTitle: string, gameId?: string): Promise<ScrapingResult>;
+
+  /**
+   * Get price from a specific product URL
+   */
+  abstract getPriceFromUrl(url: string): Promise<ScrapingResult>;
+
+  /**
+   * Save price data to database
+   */
+  async savePriceData(gameId: string, result: ScrapingResult): Promise<void> {
+    if (!result.success || !result.price || !result.url) {
+      console.log(`❌ Skipping invalid price data for ${gameId} on ${this.storeName}`);
+      return;
+    }
+
+    if (!supabase) {
+      console.error('❌ Supabase client not available');
+      return;
+    }
+
+    const priceData = {
+      game_id: gameId,
+      store_name: this.storeName,
+      price: result.price,
+      currency: 'USD',
+      url: result.url,
+      last_updated: new Date().toISOString()
+    };
+
+    try {
+      const { error } = await supabase
+        .from('game_prices')
+        .upsert([priceData], { 
+          onConflict: 'game_id,store_name',
+          ignoreDuplicates: false 
+        });
+
+      if (error) {
+        console.error(`❌ Failed to save price for ${gameId}:`, error);
+      } else {
+        console.log(`✅ Saved price for ${gameId} on ${this.storeName}: $${result.price}`);
+      }
+    } catch (error) {
+      console.error(`❌ Database error saving price for ${gameId}:`, error);
+    }
+  }
+
+  /**
+   * Generate affiliate URL if applicable
+   */
+  protected generateAffiliateUrl(originalUrl: string): string | undefined {
+    if (this.storeName === 'amazon') {
+      const amazonTag = process.env.AMAZON_AFFILIATE_TAG;
+      if (amazonTag && originalUrl.includes('amazon.')) {
+        // Add affiliate tag to Amazon URLs
+        const url = new URL(originalUrl);
+        url.searchParams.set('tag', amazonTag);
+        return url.toString();
+      }
+    }
+    return undefined;
+  }
+
+  /**
+   * Rate limiting helper
+   */
+  protected async sleep(ms: number = this.rateLimit): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  /**
+   * Clean and normalize game titles for better matching
+   */
+  protected normalizeTitle(title: string): string {
+    return title
+      .toLowerCase()
+      .replace(/[^\w\s]/g, ' ') // Replace punctuation with spaces
+      .replace(/\s+/g, ' ') // Normalize spaces
+      .replace(/^(the|a|an)\s+/i, '') // Remove articles
+      .replace(/\s+(board|card)?\s*(game|games)\s*$/i, '') // Remove "board game" suffix
+      .replace(/\s+(second|2nd|third|3rd|fourth|4th|fifth|5th)\s+edition/i, '') // Remove edition info
+      .trim();
+  }
+
+  /**
+   * Calculate confidence score for title matching with improved algorithm
+   */
+  protected calculateMatchConfidence(searchTitle: string, foundTitle: string): number {
+    const normalizedSearch = this.normalizeTitle(searchTitle);
+    const normalizedFound = this.normalizeTitle(foundTitle);
+    
+    // Exact match gets highest score
+    if (normalizedSearch === normalizedFound) return 1.0;
+    
+    // Check if one title contains the other (common with expansions/editions)
+    if (normalizedFound.includes(normalizedSearch)) return 0.95;
+    if (normalizedSearch.includes(normalizedFound)) return 0.9;
+    
+    // Split into words for analysis
+    const searchWords = normalizedSearch.split(' ').filter(w => w.length > 2);
+    const foundWords = normalizedFound.split(' ').filter(w => w.length > 2);
+    
+    if (searchWords.length === 0 || foundWords.length === 0) return 0.0;
+    
+    // Calculate word overlap
+    const matchingWords = searchWords.filter(searchWord => 
+      foundWords.some(foundWord => 
+        // Exact word match
+        foundWord === searchWord ||
+        // Partial word match (for variations like "Wingspan" vs "Wingspan:")
+        foundWord.includes(searchWord) || 
+        searchWord.includes(foundWord)
+      )
+    );
+    
+    const overlapRatio = matchingWords.length / Math.max(searchWords.length, foundWords.length);
+    
+    // Boost score if key game words match
+    let keyWordBonus = 0;
+    const keyWords = ['edition', 'deluxe', 'expansion', 'board', 'game', 'card'];
+    const hasKeyWords = searchWords.some(word => keyWords.includes(word)) &&
+                       foundWords.some(word => keyWords.includes(word));
+    if (hasKeyWords) keyWordBonus = 0.1;
+    
+    // Penalty for very different lengths (might indicate wrong product)
+    const lengthRatio = Math.min(normalizedSearch.length, normalizedFound.length) / 
+                       Math.max(normalizedSearch.length, normalizedFound.length);
+    const lengthPenalty = lengthRatio < 0.5 ? 0.2 : 0;
+    
+    // Calculate final confidence
+    const baseConfidence = overlapRatio;
+    const finalConfidence = Math.max(0, Math.min(1, baseConfidence + keyWordBonus - lengthPenalty));
+    
+    return finalConfidence;
+  }
+}
+
+/**
+ * Amazon price scraper using web scraping
+ * Note: In production, consider using Amazon Product Advertising API
+ */
+export class AmazonScraper extends PriceScraper {
+  constructor() {
+    super('Amazon', 'https://www.amazon.com', 2000); // 2 second rate limit
+  }
+
+  async searchGame(gameTitle: string, gameId?: string): Promise<ScrapingResult> {
+    try {
+      console.log(`🔍 Searching Amazon for: ${gameTitle}`);
+      
+      // Build search URL
+      const searchQuery = encodeURIComponent(`${gameTitle} board game`);
+      const searchUrl = `${this.baseUrl}/s?k=${searchQuery}&i=toys-and-games`;
+      
+      const response = await this.fetchWithRetry(searchUrl);
+      if (!response.ok) {
+        return { success: false, availability: 'unknown', error: 'Search failed', confidence: 0 };
+      }
+      
+      const html = await response.text();
+      const productInfo = this.parseAmazonSearchResults(html, gameTitle);
+      
+      if (!productInfo.success) {
+        return productInfo;
+      }
+
+      // Get detailed info from product page
+      await this.sleep();
+      return await this.getPriceFromUrl(productInfo.url!);
+      
+    } catch (error) {
+      console.error(`❌ Amazon search error for ${gameTitle}:`, error);
+      return { 
+        success: false, 
+        availability: 'unknown', 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        confidence: 0 
+      };
+    }
+  }
+
+  async getPriceFromUrl(url: string): Promise<ScrapingResult> {
+    try {
+      const response = await this.fetchWithRetry(url);
+      if (!response.ok) {
+        return { success: false, availability: 'unknown', error: 'Failed to fetch product page', confidence: 0 };
+      }
+
+      const html = await response.text();
+      return this.parseAmazonProductPage(html, url);
+      
+    } catch (error) {
+      console.error(`❌ Amazon price fetch error:`, error);
+      return { 
+        success: false, 
+        availability: 'unknown', 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        confidence: 0 
+      };
+    }
+  }
+
+  private parseAmazonSearchResults(html: string, gameTitle: string): ScrapingResult {
+    // Find product links first
+    const productLinkRegex = /href="([^"]*\/dp\/[A-Z0-9]{10}[^"]*)"/g;
+    const productLinks: string[] = [];
+    
+    let linkMatch;
+    while ((linkMatch = productLinkRegex.exec(html)) !== null && productLinks.length < 5) {
+      const url = linkMatch[1].startsWith('http') ? linkMatch[1] : `https://www.amazon.com${linkMatch[1]}`;
+      productLinks.push(url);
+    }
+
+    // Find titles - multiple patterns for better success
+    const titlePatterns = [
+      /<span class="[^"]*a-size-[^"]*"[^>]*>([^<]+)</g,
+      /<h2[^>]*>.*?<span[^>]*>([^<]+)</g,
+      /data-cy="title-recipe-0"[^>]*>([^<]+)</g,
+      /<span class="[^"]*s-color-base[^"]*"[^>]*>([^<]+)</g
+    ];
+
+    const foundTitles: string[] = [];
+    titlePatterns.forEach(pattern => {
+      let match;
+      while ((match = pattern.exec(html)) !== null && foundTitles.length < 5) {
+        const title = match[1].trim()
+          .replace(/&amp;/g, '&')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/&quot;/g, '"');
+        
+        if (title.length > 10 && !foundTitles.includes(title)) {
+          foundTitles.push(title);
+        }
+      }
+    });
+
+    // Find prices in reasonable range
+    const prices: number[] = [];
+    const priceRegex = /\$(\d+\.?\d*)/g;
+    let priceMatch;
+    while ((priceMatch = priceRegex.exec(html)) !== null && prices.length < 5) {
+      const price = parseFloat(priceMatch[1]);
+      if (price > 10 && price < 200) { // Reasonable board game price range
+        prices.push(price);
+      }
+    }
+
+    // Use the first valid combination
+    if (foundTitles.length > 0 && prices.length > 0 && productLinks.length > 0) {
+      // Calculate confidence based on title match
+      const bestTitle = foundTitles[0];
+      const confidence = this.calculateTitleMatch(bestTitle, gameTitle);
+      
+      return {
+        success: true,
+        price: prices[0],
+        availability: 'unknown',
+        url: productLinks[0],
+        confidence
+      };
+    }
+
+    return { 
+      success: false, 
+      availability: 'unknown', 
+      error: 'No valid product data found',
+      confidence: 0 
+    };
+  }
+      /<h2[^>]*class="[^"]*s-size-mini[^"]*"[^>]*>.*?<span[^>]*>([^<]+)<\/span>/gs,
+      // Data attribute patterns
+      /data-cy="title-recipe-[^"]*"[^>]*>([^<]+)</g,
+      // Link text patterns
+      /<a[^>]*href="[^"]*\/dp\/[A-Z0-9]{10}[^"]*"[^>]*>([^<]+)</g
+    ];
+    
+    const links: string[] = [];
+    const titles: string[] = [];
+    
+    // Extract product links
+    let match;
+    while ((match = productLinkRegex.exec(html)) !== null) {
+      const link = match[1].startsWith('/') ? `${this.baseUrl}${match[1]}` : match[1];
+      // Clean up the link by removing extra parameters after the main product identifier
+      const cleanLink = link.split('?')[0] + '?ref=sr_1_scraper';
+      links.push(cleanLink);
+    }
+    
+    // Try each title pattern until we find matches
+    for (const pattern of titlePatterns) {
+      const titleMatches = [];
+      let titleMatch;
+      while ((titleMatch = pattern.exec(html)) !== null) {
+        const title = titleMatch[1].trim();
+        // Filter out very short or obviously non-product titles
+        if (title.length > 3 && !title.match(/^(New|Sale|Prime|Amazon|Buy)/i)) {
+          titleMatches.push(title);
+        }
+      }
+      
+      if (titleMatches.length > 0) {
+        titles.push(...titleMatches);
+        console.log(`📝 Found ${titleMatches.length} titles using pattern ${titlePatterns.indexOf(pattern) + 1}`);
+        break; // Use first successful pattern
+      }
+    }
+    
+    // If no titles found with patterns, try extracting from links
+    if (titles.length === 0 && links.length > 0) {
+      console.log('🔍 Trying to extract titles from product URLs...');
+      // Extract product names from URLs where possible
+      links.slice(0, 10).forEach(link => {
+        const urlMatch = link.match(/\/([^\/]+)\/dp\//);
+        if (urlMatch) {
+          const urlTitle = urlMatch[1].replace(/-/g, ' ').replace(/\+/g, ' ');
+          titles.push(urlTitle);
+        }
+      });
+    }
+    
+    // Find best matching title
+    let bestMatch = { confidence: 0, index: -1, link: '' };
+    
+    // Match titles to links (they should be in similar order)
+    for (let i = 0; i < Math.min(titles.length, links.length); i++) {
+      const confidence = this.calculateMatchConfidence(gameTitle, titles[i]);
+      if (confidence > bestMatch.confidence && confidence > 0.4) { // Lowered threshold
+        bestMatch = { confidence, index: i, link: links[i] };
+      }
+    }
+    
+    // If no good title match, try matching against all links with extracted names
+    if (bestMatch.confidence < 0.4) {
+      console.log('🔍 Trying broader link matching...');
+      for (let i = 0; i < links.length; i++) {
+        const link = links[i];
+        // Extract potential game name from URL
+        const urlParts = link.split('/');
+        const productPart = urlParts.find(part => part.length > 10 && part.includes('-'));
+        if (productPart) {
+          const urlTitle = productPart.replace(/-/g, ' ').replace(/\+/g, ' ');
+          const confidence = this.calculateMatchConfidence(gameTitle, urlTitle);
+          if (confidence > bestMatch.confidence && confidence > 0.3) {
+            bestMatch = { confidence, index: i, link };
+          }
+        }
+      }
+    }
+    
+    if (bestMatch.link && bestMatch.confidence > 0.3) {
+      console.log(`🎯 Found match with confidence ${bestMatch.confidence.toFixed(2)}: ${bestMatch.link}`);
+      return {
+        success: true,
+        availability: 'unknown',
+        url: bestMatch.link,
+        confidence: bestMatch.confidence
+      };
+    }
+    
+    console.log(`❌ No suitable match found. Titles: ${titles.length}, Links: ${links.length}`);
+    return { 
+      success: false, 
+      availability: 'unknown', 
+      error: `No matching product found. Found ${titles.length} titles and ${links.length} links`, 
+      confidence: 0 
+    };
+  }
+
+  private parseAmazonProductPage(html: string, url: string): ScrapingResult {
+    // Multiple price extraction strategies for different Amazon layouts
+    const pricePatterns = [
+      // Standard pricing spans
+      /class="[^"]*a-price-whole[^"]*"[^>]*>([^<]+)</g,
+      /class="[^"]*a-offscreen[^"]*"[^>]*>\$?([0-9,]+\.?[0-9]*)</g,
+      // JSON data patterns
+      /"priceAmount":([0-9.]+)/g,
+      /"price":"([0-9,.]+)"/g,
+      // Alternative price patterns
+      /id="[^"]*price[^"]*"[^>]*>\$?([0-9,]+\.?[0-9]*)/gi,
+      /class="[^"]*price[^"]*"[^>]*>\$?([0-9,]+\.?[0-9]*)/gi,
+      // Buy box patterns
+      /<span[^>]*id="[^"]*price_inside_buybox[^"]*"[^>]*>\$?([0-9,]+\.?[0-9]*)/gi,
+      // Deal patterns
+      /class="[^"]*a-price-strike[^"]*"[^>]*>\$?([0-9,]+\.?[0-9]*)/g
+    ];
+    
+    let price: number | undefined;
+    let priceSource = 'unknown';
+    
+    // Try each price pattern
+    for (let i = 0; i < pricePatterns.length; i++) {
+      const pattern = pricePatterns[i];
+      const matches = [...html.matchAll(pattern)];
+      
+      if (matches.length > 0) {
+        console.log(`💰 Found ${matches.length} price matches with pattern ${i + 1}`);
+        
+        // Try each match to find a valid price
+        for (const match of matches) {
+          const priceStr = match[1].replace(/[,$]/g, '');
+          const parsedPrice = parseFloat(priceStr);
+          
+          // Validate price (reasonable range for board games)
+          if (!isNaN(parsedPrice) && parsedPrice > 0 && parsedPrice < 1000) {
+            price = parsedPrice;
+            priceSource = `pattern_${i + 1}`;
+            console.log(`✅ Valid price found: $${price} (source: ${priceSource})`);
+            break;
+          }
+        }
+        
+        if (price) break; // Stop at first valid price
+      }
+    }
+    
+    // Enhanced availability detection
+    const availability = this.parseAmazonAvailability(html);
+    
+    // If we found a price but availability suggests it's not available, double-check
+    if (price && availability === 'out-of-stock') {
+      console.log('⚠️ Found price but marked as out of stock - may be pre-order or marketplace seller');
+    }
+    
+    if (price) {
+      return {
+        success: true,
+        price,
+        availability,
+        url,
+        confidence: 0.9 // High confidence for product page parsing
+      };
+    }
+    
+    // Try to extract any price-like numbers as a fallback
+    const fallbackPrices = html.match(/\$([0-9]{1,3}(?:,[0-9]{3})*(?:\.[0-9]{2})?)/g);
+    if (fallbackPrices && fallbackPrices.length > 0) {
+      console.log(`🔍 Fallback: found ${fallbackPrices.length} dollar amounts:`, fallbackPrices.slice(0, 5));
+      
+      // Filter for reasonable board game prices
+      const reasonablePrices = fallbackPrices
+        .map(p => parseFloat(p.replace(/[$,]/g, '')))
+        .filter(p => p >= 10 && p <= 500) // Reasonable board game price range
+        .sort((a, b) => a - b); // Sort by price
+      
+      if (reasonablePrices.length > 0) {
+        const fallbackPrice = reasonablePrices[0]; // Take lowest reasonable price
+        console.log(`💡 Using fallback price: $${fallbackPrice}`);
+        return {
+          success: true,
+          price: fallbackPrice,
+          availability,
+          url,
+          confidence: 0.6 // Lower confidence for fallback
+        };
+      }
+    }
+    
+    return { 
+      success: false, 
+      availability, 
+      error: `Could not parse price from product page. Found ${fallbackPrices?.length || 0} dollar amounts.`,
+      confidence: 0 
+    };
+  }
+
+  private parseAmazonAvailability(html: string): 'in-stock' | 'out-of-stock' | 'unknown' {
+    // Positive availability indicators
+    const inStockIndicators = [
+      'In Stock',
+      'in stock',
+      'Add to Cart',
+      'Buy now',
+      'Available',
+      'Usually ships',
+      'Get it by',
+      'FREE delivery',
+      'Choose delivery option'
+    ];
+    
+    // Negative availability indicators  
+    const outOfStockIndicators = [
+      'Currently unavailable',
+      'Out of Stock',
+      'out of stock',
+      'Temporarily out of stock',
+      'This item is not available',
+      'See all buying options',
+      'Other sellers and resellers',
+      'Available from these sellers'
+    ];
+    
+    // Check for positive indicators first
+    for (const indicator of inStockIndicators) {
+      if (html.includes(indicator)) {
+        return 'in-stock';
+      }
+    }
+    
+    // Then check for negative indicators
+    for (const indicator of outOfStockIndicators) {
+      if (html.includes(indicator)) {
+        return 'out-of-stock';
+      }
+    }
+    
+    // If we find a buy box or cart button, it's likely in stock
+    if (html.includes('id="add-to-cart-button"') || 
+        html.includes('id="buy-now-button"') ||
+        html.includes('class="a-button-primary"')) {
+      return 'in-stock';
+    }
+    
+    return 'unknown';
+  }
+
+  private async fetchWithRetry(url: string, retries = 3): Promise<Response> {
+    const userAgents = [
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+      'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0',
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.1 Safari/605.1.15'
+    ];
+
+    for (let i = 0; i < retries; i++) {
+      try {
+        // Rotate user agents to avoid detection
+        const userAgent = userAgents[i % userAgents.length];
+        
+        const headers = {
+          'User-Agent': userAgent,
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+          'Accept-Language': 'en-US,en;q=0.5',
+          'Accept-Encoding': 'gzip, deflate, br',
+          'DNT': '1',
+          'Connection': 'keep-alive',
+          'Upgrade-Insecure-Requests': '1',
+          'Sec-Fetch-Dest': 'document',
+          'Sec-Fetch-Mode': 'navigate',
+          'Sec-Fetch-Site': 'none',
+          'Cache-Control': 'max-age=0'
+        };
+
+        console.log(`🔄 Attempt ${i + 1}/${retries} with User-Agent: ${userAgent.split(' ')[0]}...`);
+        
+        const response = await fetch(url, { headers });
+        
+        // Check for bot detection
+        if (response.status === 503 || response.status === 429) {
+          console.log(`🚫 Rate limited (${response.status}), waiting before retry...`);
+          await this.sleep(5000 * (i + 1)); // Exponential backoff
+          continue;
+        }
+        
+        if (response.ok) {
+          // Additional bot detection check on successful response
+          const responseText = await response.text();
+          
+          if (this.detectBotBlocking(responseText, url)) {
+            console.log('🚫 Bot detection triggered, trying different approach...');
+            if (i < retries - 1) {
+              await this.sleep(3000 * (i + 1));
+              continue;
+            }
+          }
+          
+          // Return a new Response object since we already consumed the body
+          return new Response(responseText, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: response.headers
+          });
+        }
+        
+        if (response.status >= 400) {
+          console.log(`❌ HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+        console.log(`❌ Request failed on attempt ${i + 1}:`, errorMessage);
+        if (i === retries - 1) throw error;
+        await this.sleep(1000 * (i + 1));
+      }
+    }
+    
+    throw new Error('Max retries exceeded');
+  }
+
+  /**
+   * Detect if the response indicates bot blocking
+   */
+  private detectBotBlocking(html: string, url: string): boolean {
+    const botIndicators = [
+      'robot',
+      'captcha',
+      'blocked',
+      'unusual traffic',
+      'verify you are human',
+      'access denied',
+      'rate limit',
+      'too many requests',
+      'suspicious activity'
+    ];
+    
+    const lowerHtml = html.toLowerCase();
+    const hasIndicators = botIndicators.some(indicator => lowerHtml.includes(indicator));
+    
+    if (hasIndicators) {
+      console.log('🚫 Bot blocking detected in response');
+      return true;
+    }
+    
+    // Check for very short responses (might be blocking pages)
+    if (html.length < 10000 && url.includes('amazon')) {
+      console.log(`⚠️ Suspiciously short response (${html.length} chars) from Amazon`);
+      return true;
+    }
+    
+    return false;
+  }
+}
+
+/**
+ * Miniature Market price scraper
+ */
+export class MiniatureMarketScraper extends PriceScraper {
+  constructor() {
+    super('Miniature Market', 'https://www.miniaturemarket.com', 1500); // 1.5 second rate limit
+  }
+
+  async searchGame(gameTitle: string, gameId?: string): Promise<ScrapingResult> {
+    try {
+      console.log(`🔍 Searching Miniature Market for: ${gameTitle}`);
+      
+      // Build search URL - use the correct Miniature Market search endpoint
+      const searchQuery = encodeURIComponent(gameTitle);
+      const searchUrl = `${this.baseUrl}/catalogsearch/result/?q=${searchQuery}`;
+      
+      const response = await this.fetchWithHeaders(searchUrl);
+      if (!response.ok) {
+        return { success: false, availability: 'unknown', error: 'Search failed', confidence: 0 };
+      }
+      
+      const html = await response.text();
+      return this.parseMiniatureMarketResults(html, gameTitle);
+      
+    } catch (error) {
+      console.error(`❌ Miniature Market search error for ${gameTitle}:`, error);
+      return { 
+        success: false, 
+        availability: 'unknown', 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        confidence: 0 
+      };
+    }
+  }
+
+  async getPriceFromUrl(url: string): Promise<ScrapingResult> {
+    try {
+      const response = await this.fetchWithHeaders(url);
+      if (!response.ok) {
+        return { success: false, availability: 'unknown', error: 'Failed to fetch product page', confidence: 0 };
+      }
+
+      const html = await response.text();
+      return this.parseMiniatureMarketProductPage(html, url);
+      
+    } catch (error) {
+      console.error(`❌ Miniature Market price fetch error:`, error);
+      return { 
+        success: false, 
+        availability: 'unknown', 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        confidence: 0 
+      };
+    }
+  }
+
+  private parseMiniatureMarketResults(html: string, gameTitle: string): ScrapingResult {
+    // Multiple patterns to find products on Miniature Market
+    const productPatterns = [
+      // Product card links with titles
+      /<a[^>]+href="([^"]*\/products\/[^"]*)"[^>]*>.*?<h3[^>]*class="[^"]*product-name[^"]*"[^>]*>([^<]+)<\/h3>/gs,
+      /<a[^>]+href="([^"]*\/products\/[^"]*)"[^>]*>.*?<div[^>]*class="[^"]*product-name[^"]*"[^>]*>([^<]+)<\/div>/gs,
+      // Alternative product link patterns
+      /<a[^>]+class="[^"]*product-item-link[^"]*"[^>]+href="([^"]*)"[^>]*>([^<]+)<\/a>/g,
+      // Simple link pattern fallback
+      /<a[^>]+href="([^"]*\/products\/[^"]*)"[^>]*>.*?title="([^"]*)"[^>]*>/gs
+    ];
+    
+    const products: Array<{url: string, title: string}> = [];
+    
+    // Try each pattern to find products
+    for (let i = 0; i < productPatterns.length; i++) {
+      const pattern = productPatterns[i];
+      let match;
+      
+      while ((match = pattern.exec(html)) !== null && products.length < 10) {
+        const url = match[1].startsWith('/') ? `${this.baseUrl}${match[1]}` : match[1];
+        const title = match[2].trim();
+        
+        // Basic validation
+        if (title.length > 2 && !title.match(/^(Sale|New|Featured)/i)) {
+          products.push({ url, title });
+        }
+      }
+      
+      if (products.length > 0) {
+        console.log(`🔗 Found ${products.length} products using pattern ${i + 1}`);
+        break;
+      }
+    }
+    
+    // If no products found with structured patterns, try a more general approach
+    if (products.length === 0) {
+      console.log('🔍 Trying general product link extraction...');
+      
+      // Look for any product links
+      const generalLinks = [...html.matchAll(/href="([^"]*\/products\/[^"]*)"/g)];
+      const generalTitles = [
+        ...html.matchAll(/<h3[^>]*>([^<]+)<\/h3>/g),
+        ...html.matchAll(/title="([^"]+)"/g),
+        ...html.matchAll(/alt="([^"]+)"/g)
+      ];
+      
+      for (let i = 0; i < Math.min(generalLinks.length, generalTitles.length) && products.length < 5; i++) {
+        const url = generalLinks[i][1].startsWith('/') ? `${this.baseUrl}${generalLinks[i][1]}` : generalLinks[i][1];
+        const title = generalTitles[i] ? generalTitles[i][1].trim() : '';
+        
+        if (title.length > 2) {
+          products.push({ url, title });
+        }
+      }
+      
+      console.log(`🔗 General extraction found ${products.length} potential products`);
+    }
+    
+    if (products.length === 0) {
+      return { 
+        success: false, 
+        availability: 'unknown', 
+        error: 'No products found in search results', 
+        confidence: 0 
+      };
+    }
+    
+    // Find best matching product
+    let bestMatch = { confidence: 0, product: products[0] };
+    
+    for (const product of products) {
+      const confidence = this.calculateMatchConfidence(gameTitle, product.title);
+      console.log(`🎯 "${product.title}" -> confidence: ${confidence.toFixed(2)}`);
+      
+      if (confidence > bestMatch.confidence) {
+        bestMatch = { confidence, product };
+      }
+    }
+    
+    // Use a lower threshold for Miniature Market since titles might be formatted differently
+    if (bestMatch.confidence > 0.3) {
+      console.log(`✅ Best match: "${bestMatch.product.title}" (confidence: ${bestMatch.confidence.toFixed(2)})`);
+      return {
+        success: true,
+        availability: 'unknown',
+        url: bestMatch.product.url,
+        confidence: bestMatch.confidence
+      };
+    }
+    
+    console.log(`❌ No good matches found. Best was ${bestMatch.confidence.toFixed(2)} confidence`);
+    return { 
+      success: false, 
+      availability: 'unknown', 
+      error: `No good product matches found. Best confidence: ${bestMatch.confidence.toFixed(2)}`, 
+      confidence: 0 
+    };
+  }
+
+  private parseMiniatureMarketProductPage(html: string, url: string): ScrapingResult {
+    // Multiple price patterns for Miniature Market
+    const pricePatterns = [
+      // Standard price classes
+      /class="[^"]*price[^"]*"[^>]*>\$?([0-9,]+\.?[0-9]*)/gi,
+      /id="[^"]*price[^"]*"[^>]*>\$?([0-9,]+\.?[0-9]*)/gi,
+      // Product price specific
+      /class="[^"]*product-price[^"]*"[^>]*>\$?([0-9,]+\.?[0-9]*)/gi,
+      /class="[^"]*special-price[^"]*"[^>]*>\$?([0-9,]+\.?[0-9]*)/gi,
+      // Sale price patterns
+      /class="[^"]*sale-price[^"]*"[^>]*>\$?([0-9,]+\.?[0-9]*)/gi,
+      // Data attributes
+      /data-price="?([0-9,]+\.?[0-9]*)"/gi,
+      // JSON patterns
+      /"price":.*?"([0-9,]+\.?[0-9]*)"/gi,
+      // Meta tag patterns
+      /<meta[^>]*property="product:price:amount"[^>]*content="([0-9,]+\.?[0-9]*)"/gi
+    ];
+    
+    let price: number | undefined;
+    let priceSource = 'unknown';
+    
+    // Try each price pattern
+    for (let i = 0; i < pricePatterns.length; i++) {
+      const pattern = pricePatterns[i];
+      const matches = [...html.matchAll(pattern)];
+      
+      if (matches.length > 0) {
+        console.log(`💰 Miniature Market: Found ${matches.length} price matches with pattern ${i + 1}`);
+        
+        for (const match of matches) {
+          const priceStr = match[1].replace(/[,$]/g, '');
+          const parsedPrice = parseFloat(priceStr);
+          
+          // Validate price range for board games
+          if (!isNaN(parsedPrice) && parsedPrice >= 5 && parsedPrice <= 500) {
+            price = parsedPrice;
+            priceSource = `pattern_${i + 1}`;
+            console.log(`✅ Valid MM price found: $${price} (source: ${priceSource})`);
+            break;
+          }
+        }
+        
+        if (price) break;
+      }
+    }
+    
+    // Fallback: look for any dollar amounts if no structured price found
+    if (!price) {
+      const fallbackPrices = html.match(/\$([0-9]{1,3}(?:,[0-9]{3})*(?:\.[0-9]{2})?)/g);
+      if (fallbackPrices && fallbackPrices.length > 0) {
+        console.log(`🔍 MM fallback: found ${fallbackPrices.length} dollar amounts`);
+        
+        const reasonablePrices = fallbackPrices
+          .map(p => parseFloat(p.replace(/[$,]/g, '')))
+          .filter(p => p >= 10 && p <= 300)
+          .sort((a, b) => a - b);
+        
+        if (reasonablePrices.length > 0) {
+          price = reasonablePrices[0];
+          priceSource = 'fallback';
+          console.log(`💡 MM using fallback price: $${price}`);
+        }
+      }
+    }
+    
+    // Check availability
+    const availability = this.parseMiniatureMarketAvailability(html);
+    
+    if (price) {
+      return {
+        success: true,
+        price,
+        availability,
+        url,
+        confidence: priceSource === 'fallback' ? 0.6 : 0.9
+      };
+    }
+    
+    return { 
+      success: false, 
+      availability, 
+      error: `Could not parse price from MM product page`,
+      confidence: 0 
+    };
+  }
+
+  private parseMiniatureMarketAvailability(html: string): 'in-stock' | 'out-of-stock' | 'unknown' {
+    // In stock indicators
+    const inStockIndicators = [
+      'Add to Cart',
+      'add to cart',
+      'In Stock',
+      'in stock',
+      'Available',
+      'Ships from',
+      'Order now',
+      'Buy it now',
+      'Quick Ship',
+      'Usually ships in'
+    ];
+    
+    // Out of stock indicators
+    const outOfStockIndicators = [
+      'Out of Stock',
+      'out of stock',
+      'Sold Out',
+      'sold out',
+      'Not Available',
+      'not available',
+      'Discontinued',
+      'discontinued',
+      'Backordered',
+      'Pre-order',
+      'Coming Soon'
+    ];
+    
+    const lowerHtml = html.toLowerCase();
+    
+    // Check for positive indicators
+    for (const indicator of inStockIndicators) {
+      if (lowerHtml.includes(indicator.toLowerCase())) {
+        return 'in-stock';
+      }
+    }
+    
+    // Check for negative indicators
+    for (const indicator of outOfStockIndicators) {
+      if (lowerHtml.includes(indicator.toLowerCase())) {
+        return 'out-of-stock';
+      }
+    }
+    
+    // Look for cart-related buttons or forms
+    if (html.includes('id="product_addtocart_form"') || 
+        html.includes('class="add-to-cart"') ||
+        html.includes('btn-cart') ||
+        html.includes('action="cart"')) {
+      return 'in-stock';
+    }
+    
+    return 'unknown';
+  }
+
+  private async fetchWithHeaders(url: string): Promise<Response> {
+    const headers = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Accept-Encoding': 'gzip, deflate, br',
+      'Connection': 'keep-alive'
+    };
+
+    return fetch(url, { headers });
+  }
+}

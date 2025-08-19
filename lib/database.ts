@@ -5,6 +5,11 @@ import type { Game, UserRecommendation, GamePrice } from './supabase';
 export async function getAllGames(): Promise<Game[]> {
   console.log('🔍 getAllGames() called - fetching all games with pagination');
   
+  if (!supabase) {
+    console.warn('⚠️ Supabase not available in getAllGames');
+    return [];
+  }
+  
   const allGames: Game[] = [];
   let from = 0;
   const batchSize = 1000;
@@ -46,6 +51,11 @@ export async function getAllGames(): Promise<Game[]> {
 }
 
 export async function searchGames(query: string, limit: number = 10): Promise<Game[]> {
+  if (!supabase) {
+    console.warn('⚠️ Supabase not available in searchGames');
+    return [];
+  }
+
   const { data, error } = await supabase
     .from('games')
     .select('*')
@@ -61,6 +71,11 @@ export async function searchGames(query: string, limit: number = 10): Promise<Ga
 }
 
 export async function getGameById(id: string): Promise<Game | null> {
+  if (!supabase) {
+    console.warn('⚠️ Supabase not available in getGameById');
+    return null;
+  }
+
   const { data, error } = await supabase
     .from('games')
     .select('*')
@@ -76,6 +91,11 @@ export async function getGameById(id: string): Promise<Game | null> {
 }
 
 export async function getGamesByComplexity(minComplexity: number, maxComplexity: number): Promise<Game[]> {
+  if (!supabase) {
+    console.warn('⚠️ Supabase not available in getGamesByComplexity');
+    return [];
+  }
+
   const { data, error } = await supabase
     .from('games')
     .select('*')
@@ -93,6 +113,11 @@ export async function getGamesByComplexity(minComplexity: number, maxComplexity:
 
 // User Sessions and Recommendations
 export async function createUserSession(fingerprint: string): Promise<string | null> {
+  if (!supabase) {
+    console.warn('⚠️ Supabase not available in createUserSession');
+    return null;
+  }
+
   const { data, error } = await supabase
     .from('user_sessions')
     .upsert({ 
@@ -116,6 +141,11 @@ export async function saveRecommendation(
   recommendedGameIds: string[],
   llmResponse: any
 ): Promise<boolean> {
+  if (!supabase) {
+    console.warn('⚠️ Supabase not available in saveRecommendation');
+    return false;
+  }
+
   const { error } = await supabase
     .from('user_recommendations')
     .insert({
@@ -138,6 +168,11 @@ export async function updateRecommendationFeedback(
   rating: number,
   notes?: string
 ): Promise<boolean> {
+  if (!supabase) {
+    console.warn('⚠️ Supabase not available in updateRecommendationFeedback');
+    return false;
+  }
+
   const { error } = await supabase
     .from('user_recommendations')
     .update({
@@ -156,6 +191,11 @@ export async function updateRecommendationFeedback(
 
 // Game Prices
 export async function getGamePrices(gameId: string): Promise<GamePrice[]> {
+  if (!supabase) {
+    console.warn('⚠️ Supabase not available in getGamePrices');
+    return [];
+  }
+
   const { data, error } = await supabase
     .from('game_prices')
     .select('*')
@@ -176,6 +216,11 @@ export async function updateGamePrice(
   price: number,
   url: string
 ): Promise<boolean> {
+  if (!supabase) {
+    console.warn('⚠️ Supabase not available in updateGamePrice');
+    return false;
+  }
+
   const { error } = await supabase
     .from('game_prices')
     .upsert({

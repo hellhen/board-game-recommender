@@ -3,6 +3,11 @@ import { supabase } from '../../../lib/supabase';
 
 export async function GET() {
   try {
+    // Check if supabase client is available
+    if (!supabase) {
+      throw new Error('Supabase client not initialized');
+    }
+
     // Check database connection
     const { count, error } = await supabase
       .from('games')
