@@ -155,7 +155,7 @@ export class PriceService {
       // Get game basic info
       const { data: games, error: gamesError } = await supabase
         .from('games')
-        .select('id, name')
+        .select('id, title')
         .in('id', gameIds);
 
       if (gamesError) {
@@ -167,7 +167,7 @@ export class PriceService {
       const gamesWithPrices: GameWithPrices[] = [];
       
       for (const game of games || []) {
-        const priceData = await this.smartPriceService.getGamePrice(game.id.toString(), game.name);
+        const priceData = await this.smartPriceService.getGamePrice(game.id.toString(), game.title);
         const cachedPrices = await this.getGamePrices(game.id.toString());
         
         let bestPrice: GameWithPrices['bestPrice'] = undefined;
@@ -191,7 +191,7 @@ export class PriceService {
 
         gamesWithPrices.push({
           id: game.id.toString(),
-          title: game.name,
+          title: game.title,
           prices: cachedPrices,
           bestPrice
         });
@@ -301,7 +301,7 @@ export class PriceService {
       // Get all games
       const { data: allGames, error: gamesError } = await supabase
         .from('games')
-        .select('id, name')
+        .select('id, title')
         .limit(100); // Limit for performance
 
       if (gamesError) {
@@ -326,7 +326,7 @@ export class PriceService {
       // Return games that don't have recent prices
       return (allGames || [])
         .filter(game => !gamesWithRecentPrices.has(game.id.toString()))
-        .map(game => ({ id: game.id.toString(), title: game.name }));
+        .map(game => ({ id: game.id.toString(), title: game.title }));
 
     } catch (error) {
       console.error('❌ Error finding games needing updates:', error);

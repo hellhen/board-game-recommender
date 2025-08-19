@@ -99,6 +99,18 @@ async function getEnhancedRecommendations(userPrompt: string): Promise<Sommelier
   const openaiApiKey = process.env.OPENAI_API_KEY;
   const model = process.env.MODEL || 'gpt-4o-mini';
   
+  // Determine appropriate temperature based on model
+  const getTemperatureForModel = (modelName: string): number => {
+    // GPT-5 models only support default temperature of 1
+    if (modelName.startsWith('gpt-5')) {
+      return 1;
+    }
+    // Other models can use 0.8 for more creative responses
+    return 0.8;
+  };
+  
+  const temperature = getTemperatureForModel(model);
+  
   if (!openaiApiKey || openaiApiKey === 'your_openai_api_key_here') {
     console.log('No OpenAI API key, using fallback');
     return getSmartFallbackRecommendations(userPrompt, allGames);
@@ -108,11 +120,11 @@ async function getEnhancedRecommendations(userPrompt: string): Promise<Sommelier
   if (allGames.length <= 500) {
     // Small database - send everything to LLM
     console.log(`📤 Sending ALL ${allGames.length} games to LLM (small database)`);
-    return await getLLMRecommendationsFromFullDatabase(userPrompt, allGames, openaiApiKey, model);
+    return await getLLMRecommendationsFromFullDatabase(userPrompt, allGames, openaiApiKey, model, temperature);
   } else {
     // Large database - use the "recommend best games then match" approach
     console.log(`📤 Large database (${allGames.length} games) - using recommendation + matching approach`);
-    return await getLLMRecommendationsThenMatch(userPrompt, allGames, openaiApiKey, model);
+    return await getLLMRecommendationsThenMatch(userPrompt, allGames, openaiApiKey, model, temperature);
   }
 }
 
@@ -123,7 +135,8 @@ async function getLLMRecommendationsFromFullDatabase(
   userPrompt: string, 
   allGames: any[], 
   openaiApiKey: string, 
-  model: string
+  model: string,
+  temperature: number
 ): Promise<SommelierResponse> {
   const gameContext = allGames.map(game => ({
     title: game.title,
@@ -154,8 +167,8 @@ IMPORTANT: Only recommend games from the provided list above. Use only the mecha
         { role: 'system', content: ENHANCED_SYSTEM_PROMPT },
         { role: 'user', content: aiPrompt }
       ],
-      temperature: 0.8,
-      max_tokens: 1500,
+      temperature,
+      max_completion_tokens: 1500,
       response_format: { type: 'json_object' }
     });
 
@@ -181,7 +194,8 @@ async function getLLMRecommendationsThenMatch(
   userPrompt: string, 
   allGames: any[], 
   openaiApiKey: string, 
-  model: string
+  model: string,
+  temperature: number
 ): Promise<SommelierResponse> {
   const generalSystemPrompt = `You are The Board Game Sommelier — a sassy, brutally honest, and devastatingly knowledgeable recommender for tabletop games.
 
@@ -225,8 +239,8 @@ You must respond with valid JSON following the schema specified in your system p
         { role: 'system', content: generalSystemPrompt },
         { role: 'user', content: aiPrompt }
       ],
-      temperature: 0.8,
-      max_tokens: 1500,
+      temperature,
+      max_completion_tokens: 1500,
       response_format: { type: 'json_object' }
     });
 
