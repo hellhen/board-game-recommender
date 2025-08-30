@@ -15,13 +15,59 @@ type Rec = {
 };
 
 export default function Home() {
-  const [prompt, setPrompt] = useState('We want something strategic but not brain-melting for date night.');
+  const defaultSuggestion = 'We want something strategic but not brain-melting for date night.';
+  const [prompt, setPrompt] = useState(defaultSuggestion);
+  const [isPrefill, setIsPrefill] = useState(true);
   const [loading, setLoading] = useState(false);
   const [recs, setRecs] = useState<Rec[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [shareLoading, setShareLoading] = useState(false);
   const [originalPrompt, setOriginalPrompt] = useState<string>('');
+  const loadingMessages: { title: string; body: string }[] = [
+    {
+      title: "Patience, darling. I'm being thorough.",
+      body:
+        "I'm sifting through my vast knowledge to find games that won't disappoint your obviously discerning taste. This takes 10-15 seconds because quality can't be rushed, unlike your last gaming purchase.",
+    },
+    {
+      title: 'Hold your horses—and your dice.',
+      body:
+        "I'm curating impeccable picks that won't embarrass you. Excellence takes 10–15 seconds; desperation takes less.",
+    },
+    {
+      title: 'Sip slowly. Great taste takes time.',
+      body:
+        "I'm swirling through thousands of options to find games worthy of your table. Unlike impulse buys, this will age well.",
+    },
+    {
+      title: 'Shh. The sommelier is selecting.',
+      body:
+        "I'm eliminating the mediocre so you don't have to pretend to enjoy it. Give me a moment to be brilliant.",
+    },
+    {
+      title: 'Almost there, superstar.',
+      body:
+        "I'm balancing theme, tension, and table drama so you look good and have fun. Quality over chaos—always.",
+    },
+  ];
+  const [currentLoadingIndex, setCurrentLoadingIndex] = useState<number>(0);
+  const [lastLoadingIndex, setLastLoadingIndex] = useState<number | null>(null);
+  const [loadingQueue, setLoadingQueue] = useState<number[]>([]);
+
+  function shuffledQueueAvoidingLast(total: number, avoid: number | null): number[] {
+    const arr = Array.from({ length: total }, (_, i) => i);
+    // Fisher-Yates shuffle
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    if (avoid !== null && arr.length > 1 && arr[0] === avoid) {
+      // Swap first two to avoid immediate repeat
+      [arr[0], arr[1]] = [arr[1], arr[0]];
+    }
+    return arr;
+  }
 
   const sassyPrompts = [
     "I need something that makes me look smarter than I am",
@@ -33,6 +79,17 @@ export default function Home() {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    // Pick the next message from a shuffled, non-repeating queue
+    setLoadingQueue(prev => {
+      let queue = prev;
+      if (!queue || queue.length === 0) {
+        queue = shuffledQueueAvoidingLast(loadingMessages.length, lastLoadingIndex);
+      }
+      const nextIdx = queue[0] ?? 0;
+      setCurrentLoadingIndex(nextIdx);
+      setLastLoadingIndex(nextIdx);
+      return queue.slice(1);
+    });
     setLoading(true); 
     setError(null);
     setRecs(null);
@@ -46,9 +103,9 @@ export default function Home() {
       });
       
       const json = await res.json();
-      if (!res.ok) throw new Error(JSON.stringify(json));
-      setRecs(json.recommendations);
-      setOriginalPrompt(prompt); // Store the prompt used for this recommendation
+  if (!res.ok) throw new Error(JSON.stringify(json));
+  setRecs(json.recommendations);
+  setOriginalPrompt(prompt); // Store the prompt used for this recommendation
     } catch (err: any) {
       setError(err.message || 'Error');
     } finally {
@@ -108,13 +165,13 @@ export default function Home() {
         <h1 className="heading-primary mb-4">
           🍷 Board Game Sassy Sommelier
         </h1>
-        <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+  <p className="text-xl text-slate-500 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
           Look, I've got <span className="text-sassy font-semibold">exquisite taste</span> in board games, 
           and frankly, you probably don't. But that's fine—I'm here to fix that. 
           Tell me what you <em>think</em> you want, and I'll tell you what you{' '}
           <em className="font-medium text-wine-600">actually</em> need.
         </p>
-        <div className="flex items-center justify-center gap-2 mt-4 text-sm text-slate-500">
+  <div className="flex flex-wrap items-center justify-center gap-2 mt-4 text-sm text-slate-400 dark:text-slate-300">
           <span>🔥 Brutally honest</span>
           <span>•</span>
           <span>🎯 Zero sugar-coating</span>
@@ -126,26 +183,32 @@ export default function Home() {
       {/* Input Form */}
       <form onSubmit={onSubmit} className="card mb-8">
         <div className="mb-4">
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+          <label className="block text-sm font-medium text-slate-400 dark:text-slate-200 mb-2">
             What's your gaming situation? Don't hold back.
           </label>
           <textarea
             className="input h-32 resize-none"
             value={prompt}
-            onChange={e => setPrompt(e.target.value)}
+            onChange={e => {
+              const val = e.target.value;
+              setPrompt(val);
+              setIsPrefill(val === defaultSuggestion);
+            }}
+            onFocus={() => setIsPrefill(prompt === defaultSuggestion)}
+            style={isPrefill ? { fontStyle: 'italic', color: '#94a3b8' } : undefined}
             placeholder="Be brutally specific. 'Something fun' is useless. Try 'I want to prove I'm smarter than my cocky brother-in-law without him rage-quitting...'"
           />
         </div>
 
         <div className="flex flex-wrap gap-2 mb-6">
-          <span className="text-xs text-slate-500 dark:text-slate-400 font-medium mb-1 w-full">
-            QUICK VIBES (click to add):
+          <span className="text-xs text-slate-400 dark:text-slate-300 font-medium mb-1 w-full">
+            QUICK EXAMPLES (click to add):
           </span>
-          {sassyPrompts.map((sassyPrompt, idx) => (
+      {sassyPrompts.map((sassyPrompt, idx) => (
             <span 
               key={idx}
               className="chip text-xs"
-              onClick={() => setPrompt(sassyPrompt)}
+        onClick={() => { setPrompt(sassyPrompt); setIsPrefill(false); }}
             >
               {sassyPrompt}
             </span>
@@ -154,7 +217,7 @@ export default function Home() {
 
         <div className="flex flex-col sm:flex-row gap-3">
           <button 
-            className={clsx('button flex-1', loading && 'opacity-60')} 
+            className={clsx('button w-full sm:flex-1 sm:w-auto', loading && 'opacity-60')} 
             disabled={loading}
           >
             {loading ? (
@@ -168,12 +231,11 @@ export default function Home() {
               </>
             )}
           </button>
-          
           {prompt && (
             <button
               type="button"
               onClick={() => setPrompt('')}
-              className="button button-secondary"
+              className="button button-secondary w-full sm:w-auto"
             >
               Clear
             </button>
@@ -208,11 +270,11 @@ export default function Home() {
             </div>
             <div className="flex-1">
               <h3 className="font-semibold text-wine-800 dark:text-wine-200 mb-1">
-                Patience, darling. I'm being thorough.
+                {loadingMessages[currentLoadingIndex]?.title || "Patience, darling. I'm being thorough."}
               </h3>
               <p className="text-sm text-wine-600 dark:text-wine-300">
-                I'm sifting through my vast knowledge to find games that won't disappoint your obviously discerning taste. 
-                This takes 10-15 seconds because <em>quality</em> can't be rushed, unlike your last gaming purchase.
+                {loadingMessages[currentLoadingIndex]?.body ||
+                  "I'm sifting through my vast knowledge to find games that won't disappoint your obviously discerning taste. This takes 10-15 seconds because quality can't be rushed, unlike your last gaming purchase."}
               </p>
             </div>
           </div>
@@ -229,9 +291,9 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid gap-6">
+      <div className="grid grid-cols-1 gap-6">
             {recs.map((rec, i) => (
-              <div key={i} className="card group hover:scale-[1.02] transition-all duration-300">
+        <div key={i} className="card group sm:hover:scale-[1.02] transition-all duration-300">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
@@ -268,11 +330,11 @@ export default function Home() {
                 </div>
 
                 {/* Sommelier Pitch */}
-                <div className="mb-4 p-4 rounded-2xl bg-wine-800/20 border border-wine-600/30">
+        <div className="mb-4 p-4 rounded-2xl bg-wine-800/20 border border-wine-600/30">
                   <div className="flex items-start gap-3">
                     <span className="text-2xl animate-float">🍷</span>
                     <div>
-                      <p className="font-medium italic leading-relaxed" style={{color: '#e8d5be'}}>
+          <p className="font-medium italic leading-relaxed break-words" style={{color: '#e8d5be'}}>
                         "{rec.sommelierPitch}"
                       </p>
                       <span className="text-xs font-medium" style={{color: '#c4a882'}}>
@@ -283,11 +345,11 @@ export default function Home() {
                 </div>
 
                 {/* Why it fits */}
-                <div className="mb-4">
+        <div className="mb-4">
                   <h4 className="font-semibold mb-2" style={{color: '#e8d5be'}}>Why this is perfect for you:</h4>
                   <ul className="space-y-1">
                     {rec.whyItFits?.map((reason, idx) => (
-                      <li key={idx} className="flex items-start gap-2 text-sm" style={{color: '#e8d5be'}}>
+          <li key={idx} className="flex items-start gap-2 text-sm break-words" style={{color: '#e8d5be'}}>
                         <span className="text-wine-400 font-bold mt-0.5">•</span>
                         <span>{reason}</span>
                       </li>
@@ -326,8 +388,8 @@ export default function Home() {
                 {/* Purchase Links */}
                 {rec.price?.amount && rec.price?.url && (
                   <div className="mb-4 p-4 bg-gradient-to-r from-green-800/20 to-emerald-800/20 border border-green-600/30 rounded-2xl">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 justify-between">
+                      <div className="flex items-center gap-3 min-w-0">
                         <span className="text-2xl">💰</span>
                         <div>
                           <div className="font-semibold text-green-200 text-lg">
@@ -342,7 +404,7 @@ export default function Home() {
                         href={rec.price.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="button bg-green-600 hover:bg-green-500 text-white border-green-500 flex items-center gap-2 text-sm"
+                        className="button bg-green-600 hover:bg-green-500 text-white border-green-500 flex items-center gap-2 text-sm w-full sm:w-auto justify-center"
                       >
                         <span>🛒</span>
                         Buy Now
@@ -384,7 +446,7 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <button 
                   onClick={() => { setRecs(null); setPrompt(''); setShareUrl(null); }}
-                  className="button"
+                  className="button w-full sm:w-auto"
                 >
                   🍷 Get More Recommendations
                 </button>
@@ -392,7 +454,7 @@ export default function Home() {
                   onClick={handleShare}
                   disabled={shareLoading}
                   className={clsx(
-                    'button button-secondary flex items-center gap-2',
+                    'button button-secondary flex items-center gap-2 w-full sm:w-auto justify-center',
                     shareLoading && 'opacity-60'
                   )}
                 >

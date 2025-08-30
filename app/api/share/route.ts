@@ -86,10 +86,18 @@ export async function POST(req: NextRequest) {
     console.log(`✓ Created shared recommendation: ${shareId}`);
     
     // Determine the base URL for the share link
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
-                   (req.headers.get('host')?.includes('vercel.app') 
-                    ? `https://${req.headers.get('host')}` 
-                    : 'http://localhost:3000');
+    // Prefer explicit env var, then fall back to the request's origin
+    const requestOrigin = (() => {
+      try {
+        const url = new URL(req.url);
+        return `${url.protocol}//${url.host}`;
+      } catch {
+        const host = req.headers.get('x-forwarded-host') || req.headers.get('host') || 'localhost:3000';
+        const proto = req.headers.get('x-forwarded-proto') || (host.startsWith('localhost') ? 'http' : 'https');
+        return `${proto}://${host}`;
+      }
+    })();
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || requestOrigin;
     
     // Return the share information
     return NextResponse.json({
