@@ -71,11 +71,11 @@ body {
 }
 
 .container { 
-  @apply max-w-4xl mx-auto px-4 py-8;
+  @apply max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8;
 }
 
 .card { 
-  @apply rounded-2xl p-8 transition-all duration-300;
+  @apply rounded-2xl p-5 sm:p-8 transition-all duration-300;
   background: 
     linear-gradient(135deg, rgba(42, 37, 30, 0.95) 0%, rgba(45, 36, 25, 0.95) 100%);
   border: 1px solid rgba(186, 124, 71, 0.3);
